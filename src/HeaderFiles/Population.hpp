@@ -11,8 +11,18 @@ struct EntityParams {
 
 class Population {
     public:
+        Population();
+
         void move();
         bool checkPreys();
+
+        Entity get(int id) const;
+        Ensemble getIds() const;
+
+        int reserve(Type type, int age);
+        void set();
+        void supprime(int id);
+
     private:
         Grid grid;
         vector<Entity> entities;
