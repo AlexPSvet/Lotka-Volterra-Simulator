@@ -17,7 +17,7 @@ $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) -c $< -o $@
 
 clean:
 	rm -rf $(BUILD_DIR)
