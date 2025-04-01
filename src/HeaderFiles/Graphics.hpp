@@ -3,6 +3,6 @@
 
 class Graphics {
     
-}
+};
 
 #endif

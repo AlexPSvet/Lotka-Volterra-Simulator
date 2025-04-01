@@ -8,7 +8,9 @@ enum class Type { rabbit, fox };
 
 const struct EntityType {
     Type type;
-    int FOOD_INIT; 
+    int FOOD_INIT;
+    int FOOD_TO_REPRODUCE_LEVEL;
+    int PROB_REPRODUCE;
 };
 
 class Entity {
@@ -17,7 +19,8 @@ class Entity {
         EntityType type;
         vector<EntityType> preys;
 
-        int food;
+        int age;
+        int foodLevel;
 };
 
 #endif
