@@ -4,7 +4,8 @@ SRC_DIR := src
 BUILD_DIR := target
 
 CXX := g++
-CXXFLAGS := -lsfml-graphics -lsfml-window -lsfml-system -I$(SRC_DIR)/HeaderFiles -fsanitize=address
+CXXFLAGS := -lsfml-graphics -lsfml-window -lsfml-system -fsanitize=address
+HEADERS_INCLUDE := -I$(SRC_DIR)/HeaderFiles
 
 SRCS := $(shell find $(SRC_DIR)/ -type f -name "*.cpp")
 OBJS := $(SRCS:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
@@ -17,7 +18,7 @@ $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(dir $@)
-	$(CXX) -c $< -o $@
+	$(CXX) $(HEADERS_INCLUDE) -c $< -o $@
 
 clean:
 	rm -rf $(BUILD_DIR)

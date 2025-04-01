@@ -3,10 +3,10 @@
 
 #include "Grid.hpp"
 
-const struct EntityParams {
-    int FOOD_INIT;
-    int FOOD_TO_REPRODUCE_LEVEL;
-    int PROB_REPRODUCE;
+struct EntityParams {
+    const int FOOD_INIT;
+    const int FOOD_TO_REPRODUCE_LEVEL;
+    const int PROB_REPRODUCE;
 };
 
 class Population {
