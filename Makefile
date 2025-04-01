@@ -4,7 +4,7 @@ SRC_DIR := src
 BUILD_DIR := target
 
 CXX := g++
-CXXFLAGS := -lsfml-graphics -lsfml-window -lsfml-system -fsanitize=address
+CXXFLAGS := -std=c++11 -lsfml-graphics -lsfml-window -lsfml-system -fsanitize=address
 HEADERS_INCLUDE := -I$(SRC_DIR)/HeaderFiles
 
 SRCS := $(shell find $(SRC_DIR)/ -type f -name "*.cpp")
