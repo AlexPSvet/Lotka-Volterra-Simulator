@@ -3,6 +3,12 @@
 
 #include "Grid.hpp"
 
+const struct EntityParams {
+    int FOOD_INIT;
+    int FOOD_TO_REPRODUCE_LEVEL;
+    int PROB_REPRODUCE;
+};
+
 class Population {
     public:
         void move();
@@ -10,6 +16,7 @@ class Population {
     private:
         Grid grid;
         vector<Entity> entities;
+        vector<EntityParams> params;
 };
 
 #endif

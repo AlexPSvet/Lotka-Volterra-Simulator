@@ -7,7 +7,6 @@ static const int INIT_ENTITIES[] = {20, 7};
 class Simulator {
     public:
     private:
-
 };
 
 #endif

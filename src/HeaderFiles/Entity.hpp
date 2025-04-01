@@ -6,29 +6,26 @@ using namespace std;
 
 enum class Type { rabbit, fox };
 
-const struct EntityParams {
-    int FOOD_INIT;
-    int FOOD_TO_REPRODUCE_LEVEL;
-    int PROB_REPRODUCE;
-};
-
 class Entity {
     public:
+        Entity(int id, Type type, int age);
+        Entity(int id, Type type, int age, int foodLevel);
+
         bool isPrey(Type type);
         bool canReproduce(Type type);
 
+        int getId();
         Type getType();
         int getAge();
         int getFoodLevel();
 
-        void setType(Type type);
-        int setAge();
-        int setFoodLevel();
+        void setAge(int age);
+        void setFoodLevel(int foodLevel);
     private:
-        Type type;
+        const Type type;
         vector<Type> preys;
-        EntityParams params;
 
+        const int id;
         int age;
         int foodLevel;
 };
