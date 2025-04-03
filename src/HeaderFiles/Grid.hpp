@@ -16,7 +16,7 @@ struct Coord {
 
         int toInt() const;
     private:
-        const float x, y;
+        float x, y;
 };
 
 class Grid {
