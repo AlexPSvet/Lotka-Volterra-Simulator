@@ -14,15 +14,15 @@ Coord::Coord(int x, int y) {
     this->y = y;
 }
 
-float Coord::getX() {
+float Coord::getX() const{
     return x;
 }
 
-float Coord::getY() {
+float Coord::getY() const{
     return y;
 }
 
-int Coord::toInt() {
+int Coord::toInt() const{
     return y * TAILLE_GRID + x;  
 }
 

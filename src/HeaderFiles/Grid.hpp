@@ -1,7 +1,6 @@
 #ifndef GRID_HPP
 #define GRID_HPP
 
-#include "Entity.hpp"
 #include <vector>
 using namespace std;
 
@@ -17,7 +16,7 @@ struct Coord {
 
         int toInt() const;
     private:
-        const float x, y;
+        float x, y;
 };
 
 class Grid {
