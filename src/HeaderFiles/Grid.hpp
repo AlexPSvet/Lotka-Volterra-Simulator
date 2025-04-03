@@ -1,7 +1,6 @@
 #ifndef GRID_HPP
 #define GRID_HPP
 
-#include "Entity.hpp"
 #include <vector>
 using namespace std;
 
