@@ -1,4 +1,4 @@
-#include "Entity.hpp"
+#include "HeaderFiles/Entity.hpp"
 
 Entity::Entity(int id, Type type, int age) : id{id}, type{type}, age{age} {}
 
