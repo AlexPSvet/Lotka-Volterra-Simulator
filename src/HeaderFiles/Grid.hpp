@@ -5,16 +5,26 @@
 #include <vector>
 using namespace std;
 
+static const int TAILLE_GRID = 10;
+
 struct Coord {
-    float x, y;
-    Entity* animal;
+    public:
+        Coord(int n);
+        Coord(int x, int y);
+
+        float getX() const;
+        float getY() const;
+
+        int toInt() const;
+    private:
+        const float x, y;
 };
 
 class Grid {
     public:
         
     private:
-        vector<Coord> grid;
+        Coord grid[TAILLE_GRID * TAILLE_GRID];
 };
 
 #endif
