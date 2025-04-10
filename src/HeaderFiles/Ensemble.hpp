@@ -12,7 +12,6 @@ struct Ensemble{
     //Constructeurs:
     Ensemble();
 
-
     //Gets:
     bool estVide() const;
     int cardinal() const;
@@ -23,8 +22,6 @@ struct Ensemble{
 
     //Operateurs:
     std::ostream& operator<<(std::ostream& out);
-
-
   private:
     vector<int> t;
     int card;
