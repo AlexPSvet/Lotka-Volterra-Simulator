@@ -1,6 +1,7 @@
 #ifndef GRID_HPP
 #define GRID_HPP
 
+#include <iostream>
 #include <vector>
 using namespace std;
 
@@ -15,6 +16,10 @@ struct Coord {
         float getY() const;
 
         int toInt() const;
+
+        ostream& operator<<(ostream& out);
+        bool operator==(const Coord& c);
+        bool operator!=(const Coord& c);
     private:
         float x, y;
 };
