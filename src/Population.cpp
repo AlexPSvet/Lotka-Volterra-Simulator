@@ -1,4 +1,4 @@
-#include "HeaderFiles/Population.hpp"
+#include "Population.hpp"
 
 Population::Population() : entities{{}}, params{{}} {}
 
@@ -10,8 +10,8 @@ Entity Population::get(int id) const {
     }
 }
 
-Ensemble Population::getIds() {
-    pass
+Ensemble Population::getIds() const {
+    
 }
 
 int Population::reserve(Type type, int age) {

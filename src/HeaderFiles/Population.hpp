@@ -3,6 +3,7 @@
 
 #include "Grid.hpp"
 #include "HeaderFiles/Ensemble.hpp"
+#include "HeaderFiles/Entity.hpp"
 
 struct EntityParams {
     const int FOOD_INIT;
