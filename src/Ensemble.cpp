@@ -5,7 +5,6 @@
 #include "HeaderFiles/Ensemble.hpp"
 
 Ensemble::Ensemble(){
-  t = {};
   card = 0;
 }
 
