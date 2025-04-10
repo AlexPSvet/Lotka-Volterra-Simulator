@@ -1,9 +1,5 @@
-//
-// Created by desarrollo on 3/4/25.
-//
-
-#ifndef ENSEMBLE_H
-#define ENSEMBLE_H
+#ifndef ENSEMBLE_HPP
+#define ENSEMBLE_HPP
 
 #include <vector>
 #include <iostream>
@@ -34,4 +30,4 @@ struct Ensemble{
     int card;
 };
 
-#endif //ENSEMBLE_H
+#endif
