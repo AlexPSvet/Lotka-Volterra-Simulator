@@ -1,29 +1,29 @@
 //
 // Created by desarrollo on 3/4/25.
 //
-#include <cstdlib>
 #include "HeaderFiles/Ensemble.hpp"
 
-Ensemble::Ensemble(){
+Ensemble::Ensemble() {
   card = 0;
 }
 
-std::ostream& Ensemble::operator<<(std::ostream& out){
+std::ostream& Ensemble::operator<<(std::ostream& out) {
   out<<"{ ";
   for (int i = 0; i < card; i++) {
+    out << t[i];
     if (i+1 >= card) {
-      out << t[i] << " }";
+      out << " }";
     } else {
-      out << t[i] << ", ";
+      out << ", ";
     }
   } return out;
 }
 
-bool Ensemble::estVide() const{
+bool Ensemble::estVide() const {
   return card == 0;
 }
 
-int Ensemble::cardinal() const{
+int Ensemble::cardinal() const {
   return card;
 }
 
@@ -31,18 +31,23 @@ void Ensemble::ajoute(int o) {
   if (card + 1 > MAXCARD){
     throw invalid_argument("Le cardinal Maximal est depassé");
   } else {
-    t.push_back(o);
+    t[card + 1] = o;
+  }
+  card++;
+}
+
+void Ensemble::erase(int i) {
+  for (int j = i; j<card; j++) {
+    t[j] = t[j+1];
   }
 }
 
-void Ensemble::tire(){
-  int o = rand() % card + 1;
-  for (int i = 0; i < card; i++){
-    if (t[i] == o){
-      t.erase(t.begin()+i);
-      break;
-    }
-  }
+int Ensemble::tire() {
+  int o = rand() % card;
+  int element = t[o];
+  erase(o);
+  card--;
+  return element;
 }
 
 

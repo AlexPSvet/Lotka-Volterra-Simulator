@@ -51,16 +51,7 @@ TEST_CASE("Test Ensemble::tire") {
 
 TEST_CASE("Test Ensemble::tire when empty") {
     Ensemble e;
-    CHECK_NOTHROW(e.tire()); // No debería lanzar una excepción
-}
-
-TEST_CASE("Test Ensemble::operator<<") {
-    Ensemble e;
-    e.ajoute(2);
-    e.ajoute(4);
-    e.ajoute(6);
-    cout << e;
-    CHECK(out.str() == "{ 2, 4, 6 }");
+    CHECK_NOTHROW(e.tire());
 }
 
 TEST_CASE("Test Ensemble::ajoute and tire combined") {

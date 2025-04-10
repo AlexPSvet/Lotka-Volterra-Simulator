@@ -2,8 +2,8 @@
 #define POPULATION_HPP
 
 #include "Grid.hpp"
-#include "HeaderFiles/Ensemble.hpp"
-#include "HeaderFiles/Entity.hpp"
+#include "../HeaderFiles/Ensemble.hpp"
+#include "../HeaderFiles/Entity.hpp"
 
 struct EntityParams {
     const int FOOD_INIT;

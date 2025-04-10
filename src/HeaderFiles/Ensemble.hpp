@@ -1,8 +1,9 @@
 #ifndef ENSEMBLE_HPP
 #define ENSEMBLE_HPP
 
-#include <vector>
 #include <iostream>
+#include <cstdlib>
+
 using namespace std;
 
 int MAXCARD = 10e3;
@@ -19,14 +20,16 @@ struct Ensemble{
 
     //Ajoute:
     void ajoute(int o);
-    void tire();
+    int tire();
+
+    //Methode aditionels:
+    void erase(int i);
 
     //Operateurs:
     std::ostream& operator<<(std::ostream& out);
 
-
   private:
-    vector<int> t;
+    int t[MAXCARD];
     int card;
 };
 
