@@ -1,7 +1,6 @@
 #ifndef POPULATION_HPP
 #define POPULATION_HPP
 
-#include "Grid.hpp"
 #include "../HeaderFiles/Ensemble.hpp"
 #include "../HeaderFiles/Entity.hpp"
 
@@ -26,7 +25,6 @@ class Population {
         void supprime(int id);
 
     private:
-        Grid grid;
         vector<Entity> entities;
         vector<EntityParams> params;
 };

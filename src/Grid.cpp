@@ -1,5 +1,5 @@
 #include <iostream>
-#include "HeaderFiles/Grid.hpp"
+#include "Grid.hpp"
 
 Coord::Coord(int n) {
     y = n / TAILLE_GRID;

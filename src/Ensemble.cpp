@@ -1,7 +1,7 @@
 //
 // Created by desarrollo on 3/4/25.
 //
-#include "HeaderFiles/Ensemble.hpp"
+#include "Ensemble.hpp"
 
 Ensemble::Ensemble() {
   card = 0;

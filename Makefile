@@ -14,7 +14,7 @@ OBJS := $(SRCS:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
 
 all: $(BUILD_DIR)/$(TARGET_EXEC)
 
-$(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)w
+$(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 	@mkdir -p $(dir $@)
 	$(CXX) $(OBJS) $(LIB_PATH) -o $@ $(LDFLAGS)
 
