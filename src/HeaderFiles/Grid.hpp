@@ -2,10 +2,13 @@
 #define GRID_HPP
 
 #include <iostream>
-#include <vector>
+#include "HeaderFiles/Ensemble.hpp"
+
 using namespace std;
 
 static const int TAILLE_GRID = 10;
+
+Ensemble grid;
 
 struct Coord {
     public:
@@ -17,18 +20,14 @@ struct Coord {
 
         int toInt() const;
 
+        Ensemble neighbours();
+
         ostream& operator<<(ostream& out);
         bool operator==(const Coord& c);
         bool operator!=(const Coord& c);
     private:
-        float x, y;
+        int x, y;
 };
 
-class Grid {
-    public:
-        
-    private:
-        Coord grid[TAILLE_GRID * TAILLE_GRID];
-};
 
 #endif
