@@ -3,7 +3,7 @@
 //
 #define DOCTEST_CONFIG_IMPLEMENT
 #include "doctest.h"
-#include "../HeaderFiles/Ensemble.hpp"
+#include "Ensemble.hpp"
 
 TEST_CASE("Test Ensemble::estVide") {
     Ensemble e;

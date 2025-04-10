@@ -26,7 +26,16 @@ int Coord::toInt() const{
     return y * TAILLE_GRID + x;  
 }
 
-ostream& operator<<(ostream& out, const Coord& c) {
-    out << "(" << c.getX() << ", " << c.getY() << ")";
+ostream& Coord::operator<<(ostream& out) {
+    out << "(" << getX() << ", " << getY() << ")";
     return out;
 }
+
+bool Coord::operator==(const Coord& c) {
+    return c.getX() == getX() && c.getY() == getY();
+}
+
+bool Coord::operator!=(const Coord& c) {
+    return !(*this == c);
+}
+
