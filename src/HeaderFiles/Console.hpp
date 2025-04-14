@@ -1,10 +1,10 @@
-#ifndef GRAPHICS_HPP
-#define GRAPHICS_HPP
+#ifndef CONSOLE_HPP
+#define CONSOLE_HPP
 
 #include <SFML/Graphics.hpp>
 #include "Simulator.hpp"
 
-class Graphics : Simulator {
+class Console : Simulator {
     
 };
 

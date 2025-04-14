@@ -1,9 +1,10 @@
 #ifndef POPULATION_HPP
 #define POPULATION_HPP
 
-#include "Grid.hpp"
-#include "../HeaderFiles/Ensemble.hpp"
-#include "../HeaderFiles/Entity.hpp"
+#include <cstdlib>
+#include "Ensemble.hpp"
+#include "Coord.hpp"
+#include "Entity.hpp"
 
 struct EntityParams {
     const int FOOD_INIT;
@@ -15,20 +16,17 @@ class Population {
     public:
         Population();
 
-        void move();
-        bool checkPreys();
-
         Entity get(int id) const;
         Ensemble getIds() const;
 
         int reserve(Type type, int age);
         void set();
         void supprime(int id);
-
     private:
-        Grid grid;
-        vector<Entity> entities;
-        vector<EntityParams> params;
+        Entity* entities;
+        int amount;
+        Ensemble ids;
+        EntityParams params;
 };
 
 #endif

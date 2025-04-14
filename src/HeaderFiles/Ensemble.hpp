@@ -6,17 +6,17 @@
 
 using namespace std;
 
-int MAXCARD = 10e3;
+const int MAXCARD = 10e3;
 
-struct Ensemble{
+struct Ensemble {
   public:
     //Constructeurs:
     Ensemble();
 
-
     //Gets:
     bool estVide() const;
     int cardinal() const;
+    int getPosition(int o) const;
 
     //Ajoute:
     void ajoute(int o);

@@ -1,16 +1,11 @@
-#include "HeaderFiles/Entity.hpp"
+#include "Entity.hpp"
 
 Entity::Entity(int id, Type type, int age) : id{id}, type{type}, age{age} {}
 
 Entity::Entity(int id, Type type, int age, int foodLevel) : id{id}, type{type}, age{age}, foodLevel{foodLevel} {}
 
-bool Entity::isPrey(Type type) {
-    for (Type preyType : preys) {
-        if (preyType == type) {
-            return true;
-        }
-    }
-    return false;
+void Entity::eat(int amount) {
+    foodLevel += amount;
 }
 
 bool Entity::canReproduce(Type type) {
@@ -33,10 +28,33 @@ int Entity::getFoodLevel() {
     return foodLevel;
 }
 
+Coord Entity::getCoord() {
+    return coord;
+}
+
+void Entity::setType(Type type) {
+    this->type = type;
+}
+
 void Entity::setAge(int age) {
     this->age = age;
 }
 
 void Entity::setFoodLevel(int foodLevel) {
     this->foodLevel = foodLevel;
+}
+
+void Entity::setCoord(Coord coord) {
+    this->coord = coord;
+}
+
+ostream& Entity::operator<<(ostream& o) {
+    switch (type) {
+        case Type::rabbit:
+            o << "R";
+            break;
+        case Type::fox:
+            o << "F";
+    }
+    return o;
 }

@@ -1,7 +1,8 @@
 #ifndef ENTITY_HPP
 #define ENTITY_HPP
 
-#include <vector>
+#include "Coord.hpp"
+#include <iostream>
 using namespace std;
 
 enum class Type { rabbit, fox };
@@ -11,23 +12,29 @@ class Entity {
         Entity(int id, Type type, int age);
         Entity(int id, Type type, int age, int foodLevel);
 
-        bool isPrey(Type type);
+        void eat(int amount);
+
         bool canReproduce(Type type);
 
         int getId();
         Type getType();
         int getAge();
         int getFoodLevel();
+        Coord getCoord();
 
+        void setType(Type type);
         void setAge(int age);
         void setFoodLevel(int foodLevel);
+        void setCoord(Coord coord);
+
+        ostream& operator<<(ostream& o);
     private:
-        const Type type;
-        vector<Type> preys;
+        Type type;
 
         const int id;
         int age;
         int foodLevel;
+        Coord coord;
 };
 
 #endif
