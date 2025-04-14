@@ -1,6 +1,6 @@
 #define DOCTEST_CONFIG_IMPLEMENT
 #include "doctest.h"
-#include "../HeaderFiles/Grid.hpp"
+#include "Coord.hpp"
 
 TEST_CASE("Test des constructeurs de Coord") {
     Coord c1(3, 7);

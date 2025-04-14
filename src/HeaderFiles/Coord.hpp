@@ -1,17 +1,18 @@
-#ifndef GRID_HPP
-#define GRID_HPP
+#ifndef CORD_HPP
+#define CORD_HPP
 
 #include <iostream>
-#include "HeaderFiles/Ensemble.hpp"
+#include "Ensemble.hpp"
 
 using namespace std;
 
-static const int TAILLE_GRID = 10;
+const int TAILLE_GRID = 10;
 
-Ensemble grid;
+const Ensemble grid;
 
 struct Coord {
     public:
+        Coord();
         Coord(int n);
         Coord(int x, int y);
 

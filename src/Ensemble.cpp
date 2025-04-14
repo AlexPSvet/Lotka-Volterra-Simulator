@@ -1,6 +1,3 @@
-//
-// Created by desarrollo on 3/4/25.
-//
 #include "Ensemble.hpp"
 
 Ensemble::Ensemble() {
@@ -27,6 +24,15 @@ int Ensemble::cardinal() const {
   return card;
 }
 
+int Ensemble::getPosition(int o) const {
+  for (int i = 0; i < card; i++) {
+    if (t[i] == o) {
+      return i;
+    }
+  }
+  return -1;
+}
+
 void Ensemble::ajoute(int o) {
   if (card + 1 > MAXCARD){
     throw invalid_argument("Le cardinal Maximal est depassé");
@@ -40,6 +46,7 @@ void Ensemble::erase(int i) {
   for (int j = i; j<card; j++) {
     t[j] = t[j+1];
   }
+  card--;
 }
 
 int Ensemble::tire() {
