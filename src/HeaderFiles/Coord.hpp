@@ -28,5 +28,18 @@ struct Coord {
         int x, y;
 };
 
+class Grid {
+    public:
+        Grid();
+
+        bool emptyCase() const;
+        int getCase(int pos) const;
+
+        void voidCase();
+        void setCase(int id);
+
+    private:
+        Ensemble ens;
+};
 
 #endif
