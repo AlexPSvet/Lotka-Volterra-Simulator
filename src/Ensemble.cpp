@@ -16,6 +16,10 @@ std::ostream& Ensemble::operator<<(std::ostream& out) {
   } return out;
 }
 
+int Ensemble::operator[](int i) const {
+  return t[i];
+}
+
 bool Ensemble::estVide() const {
   return card == 0;
 }
@@ -32,6 +36,7 @@ int Ensemble::getPosition(int o) const {
   }
   return -1;
 }
+
 
 void Ensemble::ajoute(int o) {
   if (card + 1 > MAXCARD){
@@ -57,6 +62,10 @@ int Ensemble::tire() {
   int element = t[i];
   erase(i);
   return element;
+}
+
+void Ensemble::setValue(int i, int o) {
+  t[i] = o;
 }
 
 
