@@ -8,28 +8,32 @@ void Entity::eat(int amount) {
     foodLevel += amount;
 }
 
-bool Entity::canReproduce(Type type) {
+bool Entity::canReproduce(Type type) const {
     return this->type == type;
 }
 
-int Entity::getId() {
+int Entity::getId() const {
     return id;
 }
 
-Type Entity::getType() {
+Type Entity::getType() const {
     return type;
 }
 
-int Entity::getAge() {
+int Entity::getAge() const {
     return age;
 }
 
-int Entity::getFoodLevel() {
+int Entity::getFoodLevel() const {
     return foodLevel;
 }
 
-Coord Entity::getCoord() {
+Coord Entity::getCoord() const {
     return coord;
+}
+
+bool Entity::isActive() const {
+    return active;
 }
 
 void Entity::setType(Type type) {
@@ -48,7 +52,11 @@ void Entity::setCoord(Coord coord) {
     this->coord = coord;
 }
 
-ostream& Entity::operator<<(ostream& o) {
+void Entity::setActive(bool value) {
+    active = value;
+}
+
+ostream& Entity::operator<<(ostream& o) const {
     switch (type) {
         case Type::rabbit:
             o << "R";

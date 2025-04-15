@@ -14,26 +14,29 @@ class Entity {
 
         void eat(int amount);
 
-        bool canReproduce(Type type);
+        bool canReproduce(Type type) const;
 
-        int getId();
-        Type getType();
-        int getAge();
-        int getFoodLevel();
-        Coord getCoord();
+        int getId() const;
+        Type getType() const;
+        int getAge() const;
+        int getFoodLevel() const;
+        Coord getCoord() const;
+        bool isActive() const;
 
         void setType(Type type);
         void setAge(int age);
         void setFoodLevel(int foodLevel);
         void setCoord(Coord coord);
+        void setActive(bool value);
 
-        ostream& operator<<(ostream& o);
+        ostream& operator<<(ostream& o) const;
     private:
         Type type;
 
         const int id;
         int age;
         int foodLevel;
+        bool active;
         Coord coord;
 };
 

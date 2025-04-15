@@ -2,38 +2,38 @@
 
 Population::Population() : params{{}} {}
 
-Entity Population::get(int id) const {
+Entity* Population::get(int id) const {
     for (Entity* entity : entities) {
         if (entity->getId() == id) {
-            return *entity;
+            return entity;
         }
     }
+    return NULL;
 }
 
 Ensemble Population::getIds() const {
-    // lol
+    return ids;
 }
 
 int Population::reserve(Type type, int age) {
     int id = entities.size();
-    
+    Entity entity(id, type, age);
+    entities.push_back(&entity);
+    ids.ajoute(id);
     return id;
 }
 
-// Tenemos que ver de qué manera hay que utilizar ensemble, y si tenemos que
-// usar un vector para guardar las entidades (o con pointeurs?)
-
 void Population::set(int id) {
-    //lol
+    Entity* entity = get(id);
+    entity->setActive(true);
 }
 
 void Population::supprime(int id) {
-    /*
-    for (int i=0; i<entities.size(); i++) {
-        if (id == entities[i].getId()) {
+    for (int i = 0; i < entities.size(); i++) {
+        Entity* entity = entities[i];
+        if (entity->getId() == id) {
             entities.erase(entities.begin() + i);
-            params.erase(params.begin() + i);
+            break;
         }
     }
-    */
 }
