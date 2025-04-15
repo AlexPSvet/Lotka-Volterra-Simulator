@@ -55,3 +55,9 @@ Ensemble Coord::neighbours() {
     return c;
 }
 
+Grid::Grid() : grid{Ensemble{}} {}
+
+bool Grid::emptyCase(int) const {
+
+}
+
