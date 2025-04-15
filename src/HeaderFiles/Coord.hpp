@@ -1,9 +1,7 @@
 #ifndef CORD_HPP
 #define CORD_HPP
 
-#include <iostream>
 #include "Ensemble.hpp"
-
 using namespace std;
 
 const int TAILLE_GRID = 10;
