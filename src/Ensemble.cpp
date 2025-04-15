@@ -43,17 +43,19 @@ void Ensemble::ajoute(int o) {
 }
 
 void Ensemble::erase(int i) {
-  for (int j = i; j<card; j++) {
+  for (int j = i; j<card-1; j++) {
     t[j] = t[j+1];
   }
   card--;
 }
 
 int Ensemble::tire() {
-  int o = rand() % card;
-  int element = t[o];
-  erase(o);
-  card--;
+  if (card == 0) {
+    throw runtime_error("Peut pas tirer un élément d'une liste vide.");
+  }
+  int i = rand() % card;
+  int element = t[i];
+  erase(i);
   return element;
 }
 

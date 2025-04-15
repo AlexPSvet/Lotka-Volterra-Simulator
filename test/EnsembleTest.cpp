@@ -1,15 +1,12 @@
-//
-// Created by desarrollo on 3/4/25.
-//
-#define DOCTEST_CONFIG_IMPLEMENT
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 #include "Ensemble.hpp"
 
 TEST_CASE("Test Ensemble::estVide") {
     Ensemble e;
-    CHECK(e.estVide() == true);
+    CHECK(e.estVide());
     e.ajoute(1);
-    CHECK(e.estVide() == false);
+    CHECK_FALSE(e.estVide());
 }
 
 TEST_CASE("Test Ensemble::cardinal") {
@@ -25,7 +22,7 @@ TEST_CASE("Test Ensemble::ajoute") {
     Ensemble e;
     e.ajoute(5);
     CHECK(e.cardinal() == 1);
-    CHECK(e.estVide() == false);
+    CHECK_FALSE(e.estVide());
     e.ajoute(3);
     e.ajoute(7);
     CHECK(e.cardinal() == 3);
@@ -51,7 +48,7 @@ TEST_CASE("Test Ensemble::tire") {
 
 TEST_CASE("Test Ensemble::tire when empty") {
     Ensemble e;
-    CHECK_NOTHROW(e.tire());
+    CHECK_THROWS(e.tire());
 }
 
 TEST_CASE("Test Ensemble::ajoute and tire combined") {
@@ -66,5 +63,5 @@ TEST_CASE("Test Ensemble::ajoute and tire combined") {
     CHECK(e.cardinal() == 1);
     e.tire();
     CHECK(e.cardinal() == 0);
-    CHECK(e.estVide() == true);
+    CHECK(e.estVide());
 }

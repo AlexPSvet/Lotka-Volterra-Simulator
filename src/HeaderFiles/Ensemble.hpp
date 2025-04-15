@@ -27,7 +27,6 @@ struct Ensemble {
 
     //Operateurs:
     std::ostream& operator<<(std::ostream& out);
-
   private:
     int t[MAXCARD];
     int card;
