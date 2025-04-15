@@ -3,36 +3,27 @@
 Population::Population() : params{{}} {}
 
 Entity Population::get(int id) const {
-    int iPosition = ids.getPosition(id);
-    if (iPosition == -1) {
-        throw invalid_argument("Entity doesn't exist.");
+    for (Entity* entity : entities) {
+        if (entity->getId() == id) {
+            return *entity;
+        }
     }
-    return entities[iPosition];
 }
 
 Ensemble Population::getIds() const {
-    return ids;
+    // lol
 }
 
 int Population::reserve(Type type, int age) {
-    int id = ids.cardinal();
-    Ensemble ens = getIds();
-
-    if (ens.getPosition(id) != -1) {
-        throw invalid_argument("Entity already exists");
-    }
-
-    entities = (Entity*) realloc(entities, (ids.cardinal() + 1) * sizeof(Entity));
-    ens.ajoute(id);
-    Entity entity = entities[ids.cardinal()];
-    entity.setType(type);
+    int id = entities.size();
+    
     return id;
 }
 
 // Tenemos que ver de qué manera hay que utilizar ensemble, y si tenemos que
 // usar un vector para guardar las entidades (o con pointeurs?)
 
-void Population::set() {
+void Population::set(int id) {
     //lol
 }
 

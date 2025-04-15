@@ -1,6 +1,7 @@
 #ifndef POPULATION_HPP
 #define POPULATION_HPP
 
+#include <vector>
 #include <cstdlib>
 #include "Ensemble.hpp"
 #include "Coord.hpp"
@@ -20,12 +21,10 @@ class Population {
         Ensemble getIds() const;
 
         int reserve(Type type, int age);
-        void set();
+        void set(int id);
         void supprime(int id);
     private:
-        Entity* entities;
-        int amount;
-        Ensemble ids;
+        vector<Entity*> entities;
         EntityParams params;
 };
 
