@@ -28,21 +28,16 @@ struct EntityParams {
 
 class Game {
     public:
-        Game(int probRabbit, int probFox);
+        Game();
 
         int ajouteAnimal(Type type, int age, Coord coord);
         void setEntityInit();
 
-        // La trilogia de los verifie.
         bool verifieGrille();
-        // bool verifieGrille2MasFuerteQueNunca();
-        // bool verifieGrille3ElRetornoDeLasCoords();
 
         Ensemble emptyNeighbours(Coord cord);
         Ensemble typeNeighbours(Coord cord, Type type);
         void moveEntity(int id);
-
-
     private:
         Population population;
         Grid grid;

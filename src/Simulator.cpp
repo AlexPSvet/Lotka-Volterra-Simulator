@@ -1,21 +1,15 @@
 #include "Simulator.hpp"
 
+Game::Game() {
+    setEntityInit();
+}
+
 int Game::ajouteAnimal(Type type, int age, Coord coord) {
     int id = population.reserve(type, age);
     Entity* entity = population.get(id);
     population.set(id, coord);
     return id;
 }
-
-/*
-void Game::setEntityInit(Type type) {
-    int amount = TAILLE_GRID / INIT_ENTITIES[int(type)];
-    for (int i = 0; i < amount; i++) {
-        
-        ajouteAnimal(type, 0, coord);
-    }
-}
-*/
 
 void modifie(int& card, int& i, Grid& grid, int id) {
     if (card > 0){
@@ -60,10 +54,6 @@ bool Game::verifieGrille() {
     return true;
 }
 
-Game::Game(int probRabbit, int probFox) {
-    setEntityInit();
-}
-
 Ensemble Game::emptyNeighbours(Coord cord) {
     Ensemble neighbours = cord.neighbours();
     Ensemble neighboursVides;
@@ -93,6 +83,9 @@ Ensemble Game::typeNeighbours(Coord cord, Type type) {
 void Game::moveEntity(int id){
     Coord coord = population.get(id)->getCoord();
     Ensemble neighbours = emptyNeighbours(coord);
+    if (neighbours.cardinal() == 0) {
+        return;
+    }
     int ind = rand() % neighbours.cardinal();
     grid.voidCase(coord.toInt());
     grid.setCase(neighbours[ind], id);
