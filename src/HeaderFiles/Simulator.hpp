@@ -5,19 +5,6 @@
 #include "Coord.hpp"
 #include "Population.hpp"
 
-struct TypeParams {
-    int FOOD_INIT;
-    int FOOD_TO_REPRODUCE_LEVEL;
-    int PROB_REPRODUCE;
-    int MIN_FREE_BIRTH;
-};
-
-struct EntityParams {
-    Type types[2] = { Type::rabbit, Type::fox };
-    int init_entities[2] = {20, 7};
-    TypeParams* typeParams[2];
-};
-
 class Game {
     public:
         Game();
@@ -29,8 +16,12 @@ class Game {
 
         Ensemble emptyNeighbours(Coord cord);
         Ensemble typeNeighbours(Coord cord, Type type);
-        void moveEntity(int id);
         void moveType(Type type);
+
+        void moveEntity(int id);
+        void eatPrey(int entityId, int preyId);
+        void moveRandom(int id);
+        void move(Entity* entity, int oldCoord, int newCoord);
 
         void next();
         void start();
@@ -39,8 +30,6 @@ class Game {
     private:
         Population population;
         Grid grid;
-
-        EntityParams* params;
 };
 
 

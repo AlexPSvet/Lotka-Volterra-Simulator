@@ -23,14 +23,12 @@ struct Ensemble {
     int tire();
     void setValue(int i, int o);
 
-
     //Methode aditionels:
     void erase(int i);
 
     //Operateurs:
     std::ostream& operator<<(std::ostream& out);
     int operator[](int i) const;
-
   private:
     int t[MAXCARD];
     int card;
