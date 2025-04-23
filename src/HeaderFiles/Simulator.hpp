@@ -5,18 +5,11 @@
 #include "Coord.hpp"
 #include "Population.hpp"
 
-class Simulator {
-    public:
-        void next();
-        void start();
-        void stop();
-    private:
-};
-
 struct TypeParams {
     int FOOD_INIT;
     int FOOD_TO_REPRODUCE_LEVEL;
     int PROB_REPRODUCE;
+    int MIN_FREE_BIRTH;
 };
 
 struct EntityParams {
@@ -37,11 +30,19 @@ class Game {
         Ensemble emptyNeighbours(Coord cord);
         Ensemble typeNeighbours(Coord cord, Type type);
         void moveEntity(int id);
+        void moveType(Type type);
+
+        void next();
+        void start();
+        void stop();
+
     private:
         Population population;
         Grid grid;
 
         EntityParams* params;
 };
+
+
 
 #endif

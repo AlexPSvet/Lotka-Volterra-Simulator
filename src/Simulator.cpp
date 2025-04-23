@@ -6,7 +6,6 @@ Game::Game() {
 
 int Game::ajouteAnimal(Type type, int age, Coord coord) {
     int id = population.reserve(type, age);
-    Entity* entity = population.get(id);
     population.set(id, coord);
     return id;
 }
@@ -81,12 +80,52 @@ Ensemble Game::typeNeighbours(Coord cord, Type type) {
 }
 
 void Game::moveEntity(int id){
-    Coord coord = population.get(id)->getCoord();
+    Entity* entity = population.get(id);
+    Coord coord = entity->getCoord();
     Ensemble neighbours = emptyNeighbours(coord);
     if (neighbours.cardinal() == 0) {
         return;
     }
     int ind = rand() % neighbours.cardinal();
     grid.voidCase(coord.toInt());
-    grid.setCase(neighbours[ind], id);
+    int i = neighbours[ind];
+    grid.setCase(i, id);
+    Coord newCoord(i);
+    entity->setCoord(newCoord);
+
+    //Reproduction
+    Type type = entity->getType();
+    TypeParams& typeParams = *params->typeParams[int(type)];
+    int minFreeBirth = typeParams.MIN_FREE_BIRTH;
+    if (neighbours.cardinal() >= minFreeBirth) {
+        int probReproLapin = typeParams.PROB_REPRODUCE;
+        int random = rand() % 100;
+        if (random <= probReproLapin) { //Añadir la comida
+            ajouteAnimal(type, 0, coord);
+        }
+    }
 }
+
+void Game::moveType(Type type) {
+    for (Entity *entity : population.getEntities()) {
+        if (entity->getType() == type) {
+            moveEntity(entity->getId());
+        }
+    }
+}
+
+void Game::start() {
+    setEntityInit();
+}
+
+
+void Game::next() {
+
+
+
+    moveType(Type::rabbit);
+    moveType(Type::fox);
+
+
+}
+
