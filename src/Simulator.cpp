@@ -21,8 +21,8 @@ void modifie(int& card, int& i, Grid& grid, int id) {
 }
 
 void Game::setEntityInit() {
-    int cardRabbit = INIT_ENTITIES[0];
-    int cardFox = INIT_ENTITIES[1];
+    int cardRabbit = params->init_entities[0];
+    int cardFox = params->init_entities[1];
     int cardNull = 1 - (cardFox + cardRabbit);
     for (int i = 0; i < TAILLE_GRID; i++) {
         int random = rand() % 3;
@@ -30,7 +30,7 @@ void Game::setEntityInit() {
             continue;
         }
         Coord coord(i);
-        Type type = types[random];
+        Type type = params->types[random];
         int id = ajouteAnimal(type, 0, coord);
         switch (random) {
             case 0:

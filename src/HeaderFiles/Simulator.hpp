@@ -5,9 +5,6 @@
 #include "Coord.hpp"
 #include "Population.hpp"
 
-// Répartition des animaux au début de la simulation dans la grille.
-static const int INIT_ENTITIES[] = {20, 7};
-
 class Simulator {
     public:
         void next();
@@ -16,14 +13,16 @@ class Simulator {
     private:
 };
 
-struct EntityParams {
-    const int FOOD_INIT_RABBIT;
-    const int FOOD_TO_REPRODUCE_LEVE_RABBIT;
-    const int PROB_REPRODUCE_RABBIT;
+struct TypeParams {
+    int FOOD_INIT;
+    int FOOD_TO_REPRODUCE_LEVEL;
+    int PROB_REPRODUCE;
+};
 
-    const int FOOD_INIT_FOX;
-    const int FOOD_TO_REPRODUCE_LEVEL_FOX;
-    const int PROB_REPRODUCE_FOX;
+struct EntityParams {
+    Type types[2] = { Type::rabbit, Type::fox };
+    int init_entities[2] = {20, 7};
+    TypeParams* typeParams[2];
 };
 
 class Game {
