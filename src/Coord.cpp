@@ -61,7 +61,7 @@ bool Grid::emptyCase(int pos) const {
     return (grid[pos] == -1);
 }
 
-int Grid::getCaseId(int pos) const {
+int Grid::getCase(int pos) const {
     return grid[pos];
 }
 
@@ -69,8 +69,8 @@ void Grid::voidCase(int pos) {
     grid.setValue(pos, -1);
 }
 
-void Grid::setCase(int id, int pos) {
-    grid.setValue(pos, id);
+void Grid::setCase(int i, int o) {
+    grid.setValue(i, o);
 }
 
 

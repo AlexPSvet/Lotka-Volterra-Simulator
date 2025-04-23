@@ -6,6 +6,7 @@
 using namespace std;
 
 enum class Type { rabbit, fox };
+Type types[2] = { Type::rabbit, Type::fox };
 
 class Entity {
     public:

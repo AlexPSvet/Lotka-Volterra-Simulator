@@ -33,11 +33,10 @@ class Grid {
         Grid();
 
         bool emptyCase(int pos) const;
-        int getCaseId(int pos) const;
+        int getCase(int pos) const;
 
         void voidCase(int pos);
         void setCase(int id, int pos);
-
     private:
         Ensemble grid;
 };

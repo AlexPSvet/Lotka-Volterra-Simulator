@@ -1,6 +1,6 @@
 #include "Population.hpp"
 
-Population::Population() : params{{}} {}
+Population::Population() {}
 
 Entity* Population::get(int id) const {
     for (Entity* entity : entities) {
@@ -11,20 +11,16 @@ Entity* Population::get(int id) const {
     return NULL;
 }
 
-Ensemble Population::getIds() const {
-    return ids;
-}
-
 int Population::reserve(Type type, int age) {
     int id = entities.size();
     Entity entity(id, type, age);
     entities.push_back(&entity);
-    ids.ajoute(id);
     return id;
 }
 
-void Population::set(int id) {
+void Population::set(int id, Coord coord) {
     Entity* entity = get(id);
+    entity->setCoord(coord);
     entity->setActive(true);
 }
 
@@ -36,4 +32,8 @@ void Population::supprime(int id) {
             break;
         }
     }
+}
+
+vector<Entity*> Population::getEntities() {
+    return entities;
 }

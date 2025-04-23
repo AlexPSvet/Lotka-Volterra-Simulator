@@ -18,18 +18,16 @@ class Population {
         Population();
 
         Entity* get(int id) const;
-        Ensemble getIds() const;
 
         int reserve(Type type, int age);
         
-        void set(int id);
+        void set(int id, Coord coord);
         void supprime(int id);
+
+        vector<Entity*> getEntities();
     private:
-        Grid grid;
         Ensemble ids;
         vector<Entity*> entities;
-        
-        EntityParams params;
 };
 
 #endif
