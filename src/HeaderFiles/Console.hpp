@@ -1,10 +1,11 @@
 #ifndef CONSOLE_HPP
 #define CONSOLE_HPP
 
-#include "Simulator.hpp"
+#include "Game.hpp"
 
-class Console : Simulator {
-    
+class Console {
+    private:
+        Game simulator;
 };
 
 #endif

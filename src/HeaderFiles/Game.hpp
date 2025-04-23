@@ -1,5 +1,5 @@
-#ifndef SIMULATOR_HPP
-#define SIMULATOR_HPP
+#ifndef GAME_HPP
+#define GAME_HPP
 
 #include "Entity.hpp"
 #include "Coord.hpp"
@@ -7,7 +7,7 @@
 
 class Game {
     public:
-        Game();
+        Game(EntityParams& params, int taille);
 
         int ajouteAnimal(Type type, int age, Coord coord);
         void setEntityInit();
@@ -27,9 +27,9 @@ class Game {
         void start();
         void stop();
 
+        Population& getPopulation();
     private:
         Population population;
-        Grid grid;
 };
 
 

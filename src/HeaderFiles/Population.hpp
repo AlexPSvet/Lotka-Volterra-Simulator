@@ -52,20 +52,24 @@ class EntityParams {
 
 class Population {
     public:
-        Population();
+        Population(int taille);
 
-        Entity* get(int id) const;
+        Entity* get(int id);
 
         int reserve(Type type, int age);
         
         void set(int id, Coord coord);
         void supprime(int id);
 
+        void setEntityParams(EntityParams* entityParams);
+
+        void clear();
+
         vector<Entity*>& getEntities();
         EntityParams* getParams();
-        Ensemble& getIds();
+        Grid& getGrid();
     private:
-        Ensemble ids;
+        Grid grid;
         int countId = 0;
         vector<Entity*> entities;
 

@@ -68,9 +68,9 @@ void EntityParams::addType(Type type, TypeParams params) {
     typeParams.push_back(params);
 }
 
-Population::Population() {}
+Population::Population(int taille) : grid(Grid{taille}) {}
 
-Entity* Population::get(int id) const {
+Entity* Population::get(int id) {
     for (Entity* entity : entities) {
         if (entity->getId() == id) {
             return entity;
@@ -81,8 +81,8 @@ Entity* Population::get(int id) const {
 
 int Population::reserve(Type type, int age) {
     int id = ++countId;
-    Entity entity(id, type, age);
-    entities.push_back(&entity);
+    Entity* entity = new Entity(id, type, age);
+    entities.push_back(entity);
     return id;
 }
 
@@ -92,6 +92,7 @@ void Population::set(int id, Coord coord) {
     entity->setActive(true);
     int foodLevel = params->getTypeParams(entity->getType()).getFoodInit();
     entity->setFoodLevel(foodLevel);
+    grid.setCase(coord.toInt(), id);
 }
 
 void Population::supprime(int id) {
@@ -104,6 +105,16 @@ void Population::supprime(int id) {
     }
 }
 
+void Population::clear() {
+    for (Entity* entity : entities) {
+        delete entity;
+    }
+}
+
+void Population::setEntityParams(EntityParams* entityParams) {
+    params = entityParams;
+}
+
 vector<Entity*>& Population::getEntities() {
     return entities;
 }
@@ -112,6 +123,6 @@ EntityParams* Population::getParams() {
     return params;
 }
 
-Ensemble& Population::getIds() {
-    return ids;
+Grid& Population::getGrid() {
+    return grid;
 }

@@ -6,8 +6,6 @@ using namespace std;
 
 const int TAILLE_GRID = 10;
 
-const Ensemble grid;
-
 struct Coord {
     public:
         Coord();
@@ -30,13 +28,16 @@ struct Coord {
 
 class Grid {
     public:
-        Grid();
+        Grid(int taille);
 
-        bool emptyCase(int pos) const;
-        int getCase(int pos) const;
+        bool emptyCase(int i) const;
+        int getValue(int i) const;
 
-        void voidCase(int pos);
-        void setCase(int id, int pos);
+        void voidCase(int i);
+        void setCase(int i, int value);
+
+        Ensemble getEmptyCases();
+        Ensemble& getEnsemble();
     private:
         Ensemble grid;
 };

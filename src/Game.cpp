@@ -1,6 +1,7 @@
-#include "Simulator.hpp"
+#include "Game.hpp"
 
-Game::Game() {
+Game::Game(EntityParams& params, int taille) : population(Population{taille}) {
+    population.setEntityParams(&params);
     setEntityInit();
 }
 
@@ -21,24 +22,15 @@ void modifie(int& card, int& i, Grid& grid, int id) {
 
 void Game::setEntityInit() {
     EntityParams* params = population.getParams();
-    int cardRabbit = params->getTypeParams(Type::rabbit).getEntityInit();
-    int cardFox = params->getTypeParams(Type::fox).getEntityInit();
-    int cardNull = 1 - (cardFox + cardRabbit);
-    for (int i = 0; i < TAILLE_GRID; i++) {
-        int random = rand() % 3;
-        if (random == 2) {
-            continue;
-        }
-        Coord coord(i);
-        Type type = params->getTypes()[random];
-        int id = ajouteAnimal(type, 0, coord);
-        switch (random) {
-            case 0:
-                modifie(cardRabbit, i, grid, id);
-                break;
-            case 1:
-                modifie(cardFox, i, grid, id);
-                break;
+    for (Type type : params->getTypes()) {
+        TypeParams typeParams = params->getTypeParams(type);
+        int init = typeParams.getEntityInit();
+        Ensemble emptyCases = population.getGrid().getEmptyCases();
+        for (int i = 0; i < init; i++) {
+            int randomIndex = rand() % emptyCases.cardinal();
+            int caseId = emptyCases[randomIndex];
+            // Il faut rajouter apres l'age pour les entites.
+            ajouteAnimal(type, 0, Coord(caseId));
         }
     }
 }
@@ -47,7 +39,7 @@ bool Game::verifieGrille() {
     for (Entity* entity : population.getEntities()) {
         Coord coord = entity->getCoord();
         int id = entity->getId();
-        if (grid.getCase(coord.toInt()) != id) {
+        if (population.getGrid().getValue(coord.toInt()) != id) {
             return false;
         }
     }
@@ -57,9 +49,9 @@ bool Game::verifieGrille() {
 Ensemble Game::emptyNeighbours(Coord cord) {
     Ensemble neighbours = cord.neighbours();
     Ensemble neighboursVides;
-    Ensemble& ids = population.getIds();
-    for (int i=0; i<neighbours.cardinal(); i++) {
-        if (ids[i] == -1) {
+    Grid& grid = population.getGrid();
+    for (int i=0; i < neighbours.cardinal(); i++) {
+        if (grid.getValue(i) == -1) {
             neighboursVides.ajoute(i);
         }
     }
@@ -69,9 +61,9 @@ Ensemble Game::emptyNeighbours(Coord cord) {
 Ensemble Game::typeNeighbours(Coord cord, Type type) {
     Ensemble neighbours = cord.neighbours();
     Ensemble neighboursType;
-    Ensemble& ids = population.getIds();
+    Grid& grid = population.getGrid();
     for (int i=0; i < neighbours.cardinal(); i++) {
-        int value = ids[i];
+        int value = grid.getValue(i);
         if (value != -1){
             Entity* entity = population.get(value);
             if (entity->getType() == type) {
@@ -83,8 +75,8 @@ Ensemble Game::typeNeighbours(Coord cord, Type type) {
 }
 
 void Game::move(Entity* entity, int oldCoord, int newCoord) {
-    grid.voidCase(oldCoord);
-    grid.setCase(newCoord, entity->getId());
+    population.getGrid().voidCase(oldCoord);
+    population.getGrid().setCase(newCoord, entity->getId());
     entity->setCoord(newCoord);
 }
 
@@ -140,17 +132,19 @@ void Game::moveEntity(int id) {
     // If not, move and reproduce if possible.
     moveRandom(entity->getId());
     int minFreeBirth = typeParams.getMinFreeBirth();
-    if (neighbours.cardinal() >= minFreeBirth) {
+    int foodToReproduce = typeParams.getFoodToReproduce();
+    if (neighbours.cardinal() >= minFreeBirth && entity->getFoodLevel() >= foodToReproduce) {
         int probReproLapin = typeParams.getProbToReproduce();
         int random = rand() % 100;
         if (random <= probReproLapin) {
             ajouteAnimal(type, 0, coord);
         }
+        entity->setFoodLevel(entity->getFoodLevel() - foodToReproduce);
     }
 }
 
 void Game::moveType(Type type) {
-    for (Entity *entity : population.getEntities()) {
+    for (Entity* entity : population.getEntities()) {
         if (entity->getType() == type) {
             moveEntity(entity->getId());
         }
@@ -161,7 +155,6 @@ void Game::start() {
     setEntityInit();
 }
 
-
 void Game::next() {
     moveType(Type::rabbit);
     moveType(Type::fox);
@@ -169,5 +162,9 @@ void Game::next() {
 
 void Game::stop() {
     population.getEntities().clear();
-    
+
+}
+
+Population& Game::getPopulation() {
+    return population;
 }
