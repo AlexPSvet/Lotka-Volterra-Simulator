@@ -109,6 +109,7 @@ void Population::clear() {
     for (Entity* entity : entities) {
         delete entity;
     }
+    entities.clear();
 }
 
 void Population::setEntityParams(EntityParams* entityParams) {

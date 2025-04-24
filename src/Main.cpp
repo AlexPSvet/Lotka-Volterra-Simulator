@@ -16,23 +16,23 @@ void normalGame() {
     Game game(params, TAILLE_GRID * TAILLE_GRID);
 
     Ensemble& ids = game.getPopulation().getGrid().getEnsemble();
-    ids.operator<<(cout) << endl;
 
     game.start();
-    
-    ids.operator<<(cout) << endl;
 
     cout << game.getPopulation().getEntities().size() << endl;
 
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < 3; i++) {
         game.next();
         ids.operator<<(cout) << endl;
     }
     
-    game.getPopulation().clear();
+    game.stop();
 }
 
 int main() {
+    // Set random seed for random.
+    srand(time(0));
+    // Start a normal game.
     normalGame();
     return 0;
 }

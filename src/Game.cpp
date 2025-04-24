@@ -51,7 +51,7 @@ Ensemble Game::emptyNeighbours(Coord cord) {
     Ensemble neighboursVides;
     Grid& grid = population.getGrid();
     for (int i=0; i < neighbours.cardinal(); i++) {
-        if (grid.getValue(i) == -1) {
+        if (grid.getValue(neighbours[i]) == -1) {
             neighboursVides.ajoute(i);
         }
     }
@@ -63,12 +63,11 @@ Ensemble Game::typeNeighbours(Coord cord, Type type) {
     Ensemble neighboursType;
     Grid& grid = population.getGrid();
     for (int i=0; i < neighbours.cardinal(); i++) {
-        int id = grid.getValue(i);
-        cout << id << endl;
+        int id = grid.getValue(neighbours[i]);
         if (id != -1) {
             Entity* entity = population.get(id);
             if (entity->getType() == type) {
-                neighboursType.ajoute(i);
+                neighboursType.ajoute(id);
             }
         }
     }
@@ -142,7 +141,8 @@ void Game::moveEntity(Entity* entity) {
 }
 
 void Game::moveType(Type type) {
-    for (Entity* entity : population.getEntities()) {
+    vector<Entity*> entities = population.getEntities();
+    for (Entity* entity : entities) {
         if (entity->getType() == type) {
             moveEntity(entity);
         }
@@ -159,8 +159,7 @@ void Game::next() {
 }
 
 void Game::stop() {
-    population.getEntities().clear();
-
+    population.clear();
 }
 
 Population& Game::getPopulation() {
