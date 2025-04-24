@@ -55,22 +55,38 @@ Ensemble Coord::neighbours() {
     return c;
 }
 
-Grid::Grid() : grid{Ensemble{}} {}
-
-bool Grid::emptyCase(int pos) const {
-    return (grid[pos] == -1);
+Grid::Grid(int taille) : grid{Ensemble{}} {
+    for (int i = 0; i < taille; i++) {
+        grid.ajoute(-1);
+    }
 }
 
-int Grid::getCase(int pos) const {
-    return grid[pos];
+bool Grid::emptyCase(int i) const {
+    return (grid[i] == -1);
 }
 
-void Grid::voidCase(int pos) {
-    grid.setValue(pos, -1);
+int Grid::getValue(int i) const {
+    return grid[i];
+}
+
+Ensemble Grid::getEmptyCases() {
+    Ensemble ens;
+    for (int i = 0; i < grid.cardinal(); i++) {
+        if (grid[i] == -1) {
+            ens.ajoute(i);
+        }
+    }
+    return ens;
+}
+
+void Grid::voidCase(int i) {
+    grid.setValue(i, -1);
 }
 
 void Grid::setCase(int i, int o) {
     grid.setValue(i, o);
 }
 
-
+Ensemble& Grid::getEnsemble() {
+    return grid;
+}
