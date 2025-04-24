@@ -22,6 +22,7 @@ class Game {
     public:
         Game();
 
+        Population getPopulation();
         int ajouteAnimal(Type type, int age, Coord coord);
         void setEntityInit();
 

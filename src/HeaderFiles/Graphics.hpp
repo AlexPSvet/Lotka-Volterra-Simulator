@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "Simulator.hpp"
 
-class Graphics : Simulator {
+class Graphics{
     
 };
 

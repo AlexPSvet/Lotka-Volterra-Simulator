@@ -4,6 +4,10 @@ Game::Game() {
     setEntityInit();
 }
 
+Population Game::getPopulation() {
+    return population;
+}
+
 int Game::ajouteAnimal(Type type, int age, Coord coord) {
     int id = population.reserve(type, age);
     population.set(id, coord);
@@ -98,9 +102,9 @@ void Game::moveEntity(int id){
     TypeParams& typeParams = *params->typeParams[int(type)];
     int minFreeBirth = typeParams.MIN_FREE_BIRTH;
     if (neighbours.cardinal() >= minFreeBirth) {
-        int probReproLapin = typeParams.PROB_REPRODUCE;
+        int probRepro = typeParams.PROB_REPRODUCE;
         int random = rand() % 100;
-        if (random <= probReproLapin) { //Añadir la comida
+        if (random <= probRepro) { //Añadir la comida
             ajouteAnimal(type, 0, coord);
         }
     }
@@ -120,12 +124,7 @@ void Game::start() {
 
 
 void Game::next() {
-
-
-
     moveType(Type::rabbit);
     moveType(Type::fox);
-
-
 }
 
