@@ -35,7 +35,7 @@ EntityParams Console::getParams() {
     vector<Type> types = ALL_TYPES;
     for (Type type : types) {
         string typeStr = toString(type);
-        cout << "--- CONFIGURATION POUR LE TYPE " << typeStr << " ---" << endl;
+        cout << " --- CONFIGURATION POUR LE TYPE " << typeStr << " ---" << endl;
         int entityNumberStart, foodToReproduce, foodValue, probReproduce, minFreeCases;
         cout << "Saisir le nombre d'animals initiales : ";
         cin >> entityNumberStart;
@@ -55,14 +55,16 @@ EntityParams Console::getParams() {
                 Type preyType = types[i];
                 cout << i+1 << ". " << toString(preyType) << endl;
             }
-            cout << "Saisir un numéro de type pour ajouter comme proie de " << typeStr << " (ou -1 pour continuer) : " << endl;
+            cout << "Saisir un numéro de type pour ajouter comme proie de " << typeStr << " (ou -1 pour continuer) : ";
             int choiseIndex;
             cin >> choiseIndex;
             if (choiseIndex == -1) {
                 break;
             }
             choiseIndex--;
-            preys.push_back(types[choiseIndex]);
+            Type choix = types[choiseIndex];
+            preys.push_back(choix);
+            cout << "Le type " << toString(choix) << " est enregistré comme proie de " << typeStr << "!" << endl;
         }
 
         TypeParams typeParams(entityNumberStart, foodToReproduce, foodValue, probReproduce, foodValue, probReproduce, preys);
@@ -91,5 +93,8 @@ void Console::start() {
         cout << game->getPopulation().getEntities().size() << " ENTITIES." << endl;
     }
     
+    cout << "EXIT..." << endl;
+
     game->stop();
+    delete game;
 }
