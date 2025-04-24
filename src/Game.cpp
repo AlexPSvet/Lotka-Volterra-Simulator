@@ -18,9 +18,9 @@ void Game::setEntityInit() {
         int init = typeParams.getEntityInit();
         for (int i = 0; i < init; i++) {
             int randomIndex = rand() % emptyCases.cardinal();
-            int caseId = emptyCases[randomIndex];
+            int coord = emptyCases[randomIndex];
             // Il faut rajouter apres l'age pour les entites.
-            int id = ajouteAnimal(type, 0, caseId);
+            int id = ajouteAnimal(type, 0, coord);
             emptyCases.erase(randomIndex);
         }
     }
@@ -42,8 +42,9 @@ Ensemble Game::emptyNeighbours(Coord cord) {
     Ensemble neighboursVides;
     Grid& grid = population.getGrid();
     for (int i=0; i < neighbours.cardinal(); i++) {
-        if (grid.getValue(neighbours[i]) == -1) {
-            neighboursVides.ajoute(i);
+        int indice = neighbours[i];
+        if (grid.getValue(indice) == -1) {
+            neighboursVides.ajoute(indice);
         }
     }
     return neighboursVides;
@@ -91,6 +92,7 @@ void Game::eatPrey(Entity* entity, int preyId) {
     population.supprime(preyId);
     TypeParams params = population.getParams()->getTypeParams(preyType);
     entity->setFoodLevel(entity->getFoodLevel() + params.getFoodValue());
+    move(entity, entity->getCoord().toInt(), preyCoord.toInt());
 }
 
 void Game::moveEntity(Entity* entity) {
@@ -120,9 +122,9 @@ void Game::moveEntity(Entity* entity) {
     int minFreeBirth = typeParams.getMinFreeBirth();
     int foodToReproduce = typeParams.getFoodToReproduce();
     if (neighbours.cardinal() >= minFreeBirth && entity->getFoodLevel() >= foodToReproduce) {
-        int probReproLapin = typeParams.getProbToReproduce();
+        int probRepro = typeParams.getProbToReproduce();
         int random = rand() % 100;
-        if (random <= probReproLapin) {
+        if (random <= probRepro) {
             ajouteAnimal(type, 0, coord.toInt());
         }
         entity->setFoodLevel(entity->getFoodLevel() - foodToReproduce);
