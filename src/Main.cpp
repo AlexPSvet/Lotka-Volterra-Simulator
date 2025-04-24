@@ -1,6 +1,29 @@
 #include <iostream>
+#include <cmath>
 #include "Game.hpp"
 using namespace std;
+
+void print(Game& game) {
+    Ensemble& grid = game.getPopulation().getGrid().getEnsemble();
+    int lenght = sqrt(grid.cardinal());
+    for (int y = 0; y < lenght; y++) {
+        for (int x = 0; x < lenght; x++) {
+            int entityId = grid[y * lenght + x];
+            if (entityId == -1) {
+                cout << "-";
+            } else {
+                Entity* entity = game.getPopulation().get(entityId);
+                entity->operator<<(cout);
+            }
+            cout << " ";
+        }
+        cout << endl;
+    }
+    for (int i = 0; i < lenght; i++) {
+        cout << ".";
+    }
+    cout << endl;
+}
 
 void normalGame() {
     EntityParams params;
@@ -19,11 +42,11 @@ void normalGame() {
 
     game.start();
 
-    cout << game.getPopulation().getEntities().size() << endl;
+    cout << game.getPopulation().getEntities().size() << " ENTITIES." << endl;
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 20; i++) {
         game.next();
-        ids.operator<<(cout) << endl;
+        print(game);
     }
     
     game.stop();

@@ -30,7 +30,7 @@ class Grid {
     public:
         Grid(int taille);
 
-        bool emptyCase(int i) const;
+        void emptyCase(int i);
         int getValue(int i) const;
 
         void voidCase(int i);
