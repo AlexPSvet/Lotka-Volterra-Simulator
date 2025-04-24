@@ -4,6 +4,7 @@ TypeParams::TypeParams(
     int entityInit,
     int foodInit,
     int foodToReproduceLevel,
+    int foodPerMove,
     int foodValue,
     int probReproduce,
     int minFreeBirth,
@@ -11,6 +12,7 @@ TypeParams::TypeParams(
     entityInit(entityInit), 
     foodInit(foodInit),
     foodToReproduceLevel(foodToReproduceLevel),
+    foodPerMove(foodPerMove),
     foodValue(foodValue),
     probReproduce(probReproduce),
     minFreeBirth(minFreeBirth) 
@@ -28,6 +30,10 @@ int TypeParams::getFoodInit() {
 
 int TypeParams::getFoodToReproduce() {
     return foodToReproduceLevel;
+}
+
+int TypeParams::getFoodPerMove() {
+    return foodPerMove;
 }
 
 int TypeParams::getFoodValue() {

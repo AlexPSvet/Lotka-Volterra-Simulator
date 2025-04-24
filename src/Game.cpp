@@ -67,9 +67,11 @@ Ensemble Game::typeNeighbours(Coord cord, Type type) {
 }
 
 void Game::move(Entity* entity, int oldCoord, int newCoord) {
+    TypeParams typeParams = population.getParams()->getTypeParams(entity->getType());
     population.getGrid().voidCase(oldCoord);
     population.getGrid().setValue(newCoord, entity->getId());
     entity->setCoord(newCoord);
+    entity->addFood(typeParams.getFoodPerMove());
 }
 
 void Game::moveRandom(Entity* entity){

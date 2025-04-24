@@ -50,6 +50,10 @@ void Entity::setFoodLevel(int foodLevel) {
     this->foodLevel = foodLevel;
 }
 
+void Entity::addFood(int food) {
+    foodLevel += food;
+}
+
 void Entity::setCoord(Coord coord) {
     this->coord = coord;
 }

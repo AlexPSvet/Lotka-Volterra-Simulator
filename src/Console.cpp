@@ -36,11 +36,13 @@ EntityParams Console::getParams() {
     for (Type type : types) {
         string typeStr = toString(type);
         cout << " --- CONFIGURATION POUR LE TYPE " << typeStr << " ---" << endl;
-        int entityNumberStart, foodToReproduce, foodValue, probReproduce, minFreeCases;
+        int entityNumberStart, foodToReproduce, foodPerMove, foodValue, probReproduce, minFreeCases;
         cout << "Saisir le nombre d'animals initiales : ";
         cin >> entityNumberStart;
         cout << "Saisir la valeur minimale de nourriture pour se reproduire : ";
         cin >> foodToReproduce;
+        cout << "Saisir la nourriture donnée par mouvement : ";
+        cin >> foodPerMove;
         cout << "Saisir la valeur en nourriture : ";
         cin >> foodValue;
         cout << "Saisir la probabilité pour se reproduite (En pourcentage) : ";
@@ -67,7 +69,7 @@ EntityParams Console::getParams() {
             cout << "Le type " << toString(choix) << " est enregistré comme proie de " << typeStr << "!" << endl;
         }
 
-        TypeParams typeParams(entityNumberStart, foodToReproduce, foodValue, probReproduce, foodValue, probReproduce, preys);
+        TypeParams typeParams(entityNumberStart, foodToReproduce, foodPerMove, foodValue, probReproduce, foodValue, probReproduce, preys);
         params.addType(type, typeParams);
         cout << " --- CONFIGURATION DE " << typeStr << " ENREGISTRÉ! ---" << endl;
     }

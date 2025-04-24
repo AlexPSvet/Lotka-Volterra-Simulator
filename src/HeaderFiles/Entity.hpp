@@ -28,6 +28,7 @@ class Entity {
         void setType(Type type);
         void setAge(int age);
         void setFoodLevel(int foodLevel);
+        void addFood(int food);
         void setCoord(Coord coord);
         void setActive(bool value);
 
