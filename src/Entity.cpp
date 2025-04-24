@@ -1,5 +1,7 @@
 #include "Entity.hpp"
 
+const vector<Type> ALL_TYPES = { Type::rabbit, Type::fox };
+
 Entity::Entity(int id, Type type, int age) : id{id}, type{type}, age{age} {}
 
 Entity::Entity(int id, Type type, int age, int foodLevel) : id{id}, type{type}, age{age}, foodLevel{foodLevel} {}

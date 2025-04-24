@@ -92,7 +92,7 @@ void Population::set(int id, int coord) {
     entity->setActive(true);
     int foodLevel = params->getTypeParams(entity->getType()).getFoodInit();
     entity->setFoodLevel(foodLevel);
-    grid.setCase(coord, id);
+    grid.setValue(coord, id);
 }
 
 void Population::supprime(int id) {
@@ -100,9 +100,9 @@ void Population::supprime(int id) {
         Entity* entity = entities[i];
         Coord coord = entity->getCoord();
         if (entity->getId() == id) {
-            entities.erase(entities.begin() + i);
             delete entity;
-            grid.emptyCase(coord.toInt());
+            entities.erase(entities.begin() + i);
+            grid.voidCase(coord.toInt());
             return;
         }
     }

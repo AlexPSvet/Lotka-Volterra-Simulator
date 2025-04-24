@@ -30,7 +30,7 @@ bool Game::verifieGrille() {
     for (Entity* entity : population.getEntities()) {
         Coord coord = entity->getCoord();
         int id = entity->getId();
-        if (population.getGrid().getValue(coord.toInt()) != id) {
+        if (population.getGrid()[coord.toInt()] != id) {
             return false;
         }
     }
@@ -43,7 +43,7 @@ Ensemble Game::emptyNeighbours(Coord cord) {
     Grid& grid = population.getGrid();
     for (int i=0; i < neighbours.cardinal(); i++) {
         int indice = neighbours[i];
-        if (grid.getValue(indice) == -1) {
+        if (grid[indice] == -1) {
             neighboursVides.ajoute(indice);
         }
     }
@@ -55,7 +55,7 @@ Ensemble Game::typeNeighbours(Coord cord, Type type) {
     Ensemble neighboursType;
     Grid& grid = population.getGrid();
     for (int i=0; i < neighbours.cardinal(); i++) {
-        int id = grid.getValue(neighbours[i]);
+        int id = grid[neighbours[i]];
         if (id != -1) {
             Entity* entity = population.get(id);
             if (entity->getType() == type) {
@@ -68,7 +68,7 @@ Ensemble Game::typeNeighbours(Coord cord, Type type) {
 
 void Game::move(Entity* entity, int oldCoord, int newCoord) {
     population.getGrid().voidCase(oldCoord);
-    population.getGrid().setCase(newCoord, entity->getId());
+    population.getGrid().setValue(newCoord, entity->getId());
     entity->setCoord(newCoord);
 }
 
@@ -132,7 +132,7 @@ void Game::moveEntity(Entity* entity) {
 }
 
 void Game::moveType(Type type) {
-    Ensemble& grid = population.getGrid().getEnsemble();
+    Grid& grid = population.getGrid();
     for (int i = 0; i < grid.cardinal(); i++) {
         int id = grid[i];
         if (id == -1) {
