@@ -61,8 +61,8 @@ Grid::Grid(int taille) : grid{Ensemble{}} {
     }
 }
 
-bool Grid::emptyCase(int i) const {
-    return (grid[i] == -1);
+void Grid::emptyCase(int i) {
+    grid.setValue(i, -1);
 }
 
 int Grid::getValue(int i) const {

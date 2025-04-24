@@ -10,21 +10,12 @@ int Game::ajouteAnimal(Type type, int age, int coord) {
     return id;
 }
 
-void modifie(int& card, int& i, Grid& grid, int id) {
-    if (card > 0){
-        grid.setCase(id, i);
-        card--;
-    } else {
-        i--;
-    }
-}
-
 void Game::setEntityInit() {
     EntityParams* params = population.getParams();
+    Ensemble emptyCases = population.getGrid().getEmptyCases();
     for (Type type : params->getTypes()) {
         TypeParams typeParams = params->getTypeParams(type);
         int init = typeParams.getEntityInit();
-        Ensemble emptyCases = population.getGrid().getEmptyCases();
         for (int i = 0; i < init; i++) {
             int randomIndex = rand() % emptyCases.cardinal();
             int caseId = emptyCases[randomIndex];
@@ -96,10 +87,8 @@ void Game::moveRandom(Entity* entity){
 void Game::eatPrey(Entity* entity, int preyId) {
     Entity* prey = population.get(preyId);
     Coord preyCoord = prey->getCoord();
-
-    population.supprime(preyId);
-
     Type preyType = prey->getType();
+    population.supprime(preyId);
     TypeParams params = population.getParams()->getTypeParams(preyType);
     entity->setFoodLevel(entity->getFoodLevel() + params.getFoodValue());
 }
@@ -141,8 +130,13 @@ void Game::moveEntity(Entity* entity) {
 }
 
 void Game::moveType(Type type) {
-    vector<Entity*> entities = population.getEntities();
-    for (Entity* entity : entities) {
+    Ensemble& grid = population.getGrid().getEnsemble();
+    for (int i = 0; i < grid.cardinal(); i++) {
+        int id = grid[i];
+        if (id == -1) {
+            continue;
+        }
+        Entity* entity = population.get(id);
         if (entity->getType() == type) {
             moveEntity(entity);
         }

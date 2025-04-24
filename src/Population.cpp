@@ -98,8 +98,11 @@ void Population::set(int id, int coord) {
 void Population::supprime(int id) {
     for (int i = 0; i < entities.size(); i++) {
         Entity* entity = entities[i];
+        Coord coord = entity->getCoord();
         if (entity->getId() == id) {
+            delete entity;
             entities.erase(entities.begin() + i);
+            grid.emptyCase(coord.toInt());
             break;
         }
     }
