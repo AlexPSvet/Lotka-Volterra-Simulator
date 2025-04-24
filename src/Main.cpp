@@ -19,7 +19,7 @@ void print(Game& game) {
         }
         cout << endl;
     }
-    for (int i = 0; i < lenght; i++) {
+    for (int i = 0; i < 2*lenght; i++) {
         cout << ".";
     }
     cout << endl;
@@ -44,9 +44,15 @@ void normalGame() {
 
     cout << game.getPopulation().getEntities().size() << " ENTITIES." << endl;
 
+    cout << "GAME START :" << endl;
+    print(game);
+    cout << "NEXT STEPS :" << endl;
+
     for (int i = 0; i < 20; i++) {
-        game.next();
+        game.moveType(Type::rabbit);
+        game.moveType(Type::fox);
         print(game);
+        cout << game.getPopulation().getEntities().size() << " ENTITIES." << endl;
     }
     
     game.stop();

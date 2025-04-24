@@ -100,12 +100,13 @@ void Population::supprime(int id) {
         Entity* entity = entities[i];
         Coord coord = entity->getCoord();
         if (entity->getId() == id) {
-            delete entity;
             entities.erase(entities.begin() + i);
+            delete entity;
             grid.emptyCase(coord.toInt());
-            break;
+            return;
         }
     }
+    throw runtime_error("Failed to remove entity id.");
 }
 
 void Population::clear() {
