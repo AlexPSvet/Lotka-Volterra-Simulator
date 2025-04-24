@@ -1,4 +1,5 @@
-#include "Game.hpp"
+#include "HeaderFiles/Game.hpp"
+#include "HeaderFiles/Coord.hpp"
 
 Game::Game(EntityParams& params, int taille) : population(Population{taille}) {
     population.setEntityParams(&params);

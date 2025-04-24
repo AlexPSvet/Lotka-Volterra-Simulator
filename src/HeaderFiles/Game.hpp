@@ -32,6 +32,4 @@ class Game {
         Population population;
 };
 
-
-
 #endif
