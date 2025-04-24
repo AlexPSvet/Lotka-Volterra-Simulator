@@ -2,10 +2,9 @@
 
 Game::Game(EntityParams& params, int taille) : population(Population{taille}) {
     population.setEntityParams(&params);
-    setEntityInit();
 }
 
-int Game::ajouteAnimal(Type type, int age, Coord coord) {
+int Game::ajouteAnimal(Type type, int age, int coord) {
     int id = population.reserve(type, age);
     population.set(id, coord);
     return id;
@@ -30,7 +29,8 @@ void Game::setEntityInit() {
             int randomIndex = rand() % emptyCases.cardinal();
             int caseId = emptyCases[randomIndex];
             // Il faut rajouter apres l'age pour les entites.
-            ajouteAnimal(type, 0, Coord(caseId));
+            int id = ajouteAnimal(type, 0, caseId);
+            emptyCases.erase(randomIndex);
         }
     }
 }
@@ -63,9 +63,10 @@ Ensemble Game::typeNeighbours(Coord cord, Type type) {
     Ensemble neighboursType;
     Grid& grid = population.getGrid();
     for (int i=0; i < neighbours.cardinal(); i++) {
-        int value = grid.getValue(i);
-        if (value != -1){
-            Entity* entity = population.get(value);
+        int id = grid.getValue(i);
+        cout << id << endl;
+        if (id != -1) {
+            Entity* entity = population.get(id);
             if (entity->getType() == type) {
                 neighboursType.ajoute(i);
             }
@@ -80,8 +81,7 @@ void Game::move(Entity* entity, int oldCoord, int newCoord) {
     entity->setCoord(newCoord);
 }
 
-void Game::moveRandom(int id){
-    Entity* entity = population.get(id);
+void Game::moveRandom(Entity* entity){
     Coord currentCoord = entity->getCoord();
     Ensemble neighbours = emptyNeighbours(currentCoord);
     // If no neighbours, can't move.
@@ -94,8 +94,7 @@ void Game::moveRandom(int id){
     move(entity, currentCoord.toInt(), neighbours[ind]);
 }
 
-void Game::eatPrey(int entityId, int preyId) {
-    Entity* entity = population.get(entityId);
+void Game::eatPrey(Entity* entity, int preyId) {
     Entity* prey = population.get(preyId);
     Coord preyCoord = prey->getCoord();
 
@@ -106,8 +105,7 @@ void Game::eatPrey(int entityId, int preyId) {
     entity->setFoodLevel(entity->getFoodLevel() + params.getFoodValue());
 }
 
-void Game::moveEntity(int id) {
-    Entity* entity = population.get(id);
+void Game::moveEntity(Entity* entity) {
     Coord coord = entity->getCoord();
     Type type = entity->getType();
     TypeParams typeParams = population.getParams()->getTypeParams(type);
@@ -124,20 +122,20 @@ void Game::moveEntity(int id) {
         if (preys.cardinal() != 0) {
             int ind = rand() % preys.cardinal();
             int preyId = preys[ind];
-            eatPrey(entity->getId(), preyId);
+            eatPrey(entity, preyId);
             return;
         }
     }
 
     // If not, move and reproduce if possible.
-    moveRandom(entity->getId());
+    moveRandom(entity);
     int minFreeBirth = typeParams.getMinFreeBirth();
     int foodToReproduce = typeParams.getFoodToReproduce();
     if (neighbours.cardinal() >= minFreeBirth && entity->getFoodLevel() >= foodToReproduce) {
         int probReproLapin = typeParams.getProbToReproduce();
         int random = rand() % 100;
         if (random <= probReproLapin) {
-            ajouteAnimal(type, 0, coord);
+            ajouteAnimal(type, 0, coord.toInt());
         }
         entity->setFoodLevel(entity->getFoodLevel() - foodToReproduce);
     }
@@ -146,7 +144,7 @@ void Game::moveEntity(int id) {
 void Game::moveType(Type type) {
     for (Entity* entity : population.getEntities()) {
         if (entity->getType() == type) {
-            moveEntity(entity->getId());
+            moveEntity(entity);
         }
     }
 }

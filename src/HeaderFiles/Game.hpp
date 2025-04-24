@@ -9,7 +9,7 @@ class Game {
     public:
         Game(EntityParams& params, int taille);
 
-        int ajouteAnimal(Type type, int age, Coord coord);
+        int ajouteAnimal(Type type, int age, int coord);
         void setEntityInit();
 
         bool verifieGrille();
@@ -18,9 +18,9 @@ class Game {
         Ensemble typeNeighbours(Coord cord, Type type);
         void moveType(Type type);
 
-        void moveEntity(int id);
-        void eatPrey(int entityId, int preyId);
-        void moveRandom(int id);
+        void moveEntity(Entity* entity);
+        void eatPrey(Entity* entity, int preyId);
+        void moveRandom(Entity* entity);
         void move(Entity* entity, int oldCoord, int newCoord);
 
         void next();

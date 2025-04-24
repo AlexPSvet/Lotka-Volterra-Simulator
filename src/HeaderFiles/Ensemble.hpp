@@ -25,6 +25,7 @@ struct Ensemble {
 
     //Methode aditionels:
     void erase(int i);
+    void remove(int o);
 
     //Operateurs:
     std::ostream& operator<<(std::ostream& out);

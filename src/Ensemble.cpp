@@ -31,17 +31,17 @@ int Ensemble::cardinal() const {
 int Ensemble::getPosition(int o) const {
 	for (int i = 0; i < card; i++) {
 		if (t[i] == o) {
-		return i;
+			return i;
 		}
 	}
 	return -1;
 }
 
 void Ensemble::ajoute(int o) {
-	if (card + 1 > MAXCARD){
+	if (card > MAXCARD){
 		throw invalid_argument("Le cardinal Maximal est depassé");
 	} else {
-		t[card + 1] = o;
+		t[card] = o;
 	}
 	card++;
 }
@@ -51,6 +51,15 @@ void Ensemble::erase(int i) {
 		t[j] = t[j+1];
 	}
 	card--;
+}
+
+void Ensemble::remove(int o) {
+	for (int i = 0; i < card; i++) {
+		if (t[i] == o) {
+			erase(i);
+			break;
+		}
+	}
 }
 
 int Ensemble::tire() {

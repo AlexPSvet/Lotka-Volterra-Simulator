@@ -80,19 +80,19 @@ Entity* Population::get(int id) {
 }
 
 int Population::reserve(Type type, int age) {
-    int id = ++countId;
+    int id = countId++;
     Entity* entity = new Entity(id, type, age);
     entities.push_back(entity);
     return id;
 }
 
-void Population::set(int id, Coord coord) {
+void Population::set(int id, int coord) {
     Entity* entity = get(id);
     entity->setCoord(coord);
     entity->setActive(true);
     int foodLevel = params->getTypeParams(entity->getType()).getFoodInit();
     entity->setFoodLevel(foodLevel);
-    grid.setCase(coord.toInt(), id);
+    grid.setCase(coord, id);
 }
 
 void Population::supprime(int id) {

@@ -14,9 +14,20 @@ void normalGame() {
     params.addType(Type::rabbit, rabbitParams);
 
     Game game(params, TAILLE_GRID * TAILLE_GRID);
+
+    Ensemble& ids = game.getPopulation().getGrid().getEnsemble();
+    ids.operator<<(cout) << endl;
+
     game.start();
-    Ensemble ids = game.getPopulation().getGrid().getEnsemble();
-    ids.operator<<(cout);
+    
+    ids.operator<<(cout) << endl;
+
+    cout << game.getPopulation().getEntities().size() << endl;
+
+    for (int i = 0; i < 50; i++) {
+        game.next();
+        ids.operator<<(cout) << endl;
+    }
     
     game.getPopulation().clear();
 }

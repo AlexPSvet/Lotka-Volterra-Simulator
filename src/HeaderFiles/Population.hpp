@@ -58,7 +58,7 @@ class Population {
 
         int reserve(Type type, int age);
         
-        void set(int id, Coord coord);
+        void set(int id, int coord);
         void supprime(int id);
 
         void setEntityParams(EntityParams* entityParams);
