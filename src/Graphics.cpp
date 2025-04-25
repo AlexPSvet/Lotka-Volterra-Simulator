@@ -22,7 +22,7 @@ void Graphics::draw(Population p, RenderWindow &w) {
             draw_point(w, {px, py}, Color::Red);
         }
     }
-    sleep(seconds(1));
+    sleep(seconds(0.5));
 }
 
 void Graphics::start() {
@@ -33,7 +33,7 @@ void Graphics::start() {
     params.addType(Type::rabbit, rabbitParams);
     params.addType(Type::fox, foxParams);
 
-    Game game(params, TAILLE_GRID*TAILLE_GRID);
+    Game game(params, TAILLE_GRID);
     game.start();
 
     RenderWindow window(VideoMode({WINDOW_SIZE,WINDOW_SIZE}, WINDOW_SIZE), "Simulation");
