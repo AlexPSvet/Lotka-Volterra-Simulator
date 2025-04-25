@@ -108,6 +108,12 @@ void Game::moveEntity(Entity* entity) {
         return;
     }
 
+    // If entity has no food, it dies.
+    if (entity->getFoodLevel() <= 0) {
+        population.supprime(entity->getId());
+        return;
+    }
+
     // If preys, then eat one of them.
     for (Type preyType : typeParams.getPreys()) {
         Ensemble preys = typeNeighbours(coord, preyType);

@@ -19,6 +19,54 @@ void Console::print() {
     cout << endl << endl;
 }
 
+void Console::drawGrid() {
+    Grid& grid = game->getPopulation().getGrid();
+    int length = grid.getGridLenght();
+    const int PIXEL_SIZE = 100;         
+
+    int imgWidth = length * PIXEL_SIZE;
+    int imgHeight = length * PIXEL_SIZE;
+
+    ostringstream filename;
+    filename << "img" << setfill('0') << setw(3) << compteurFichier << ".ppm";
+    compteurFichier++;
+    cout << "Ecriture dans le fichier : " << filename.str() << endl;
+
+    ofstream fic(filename.str(), ios::out | ios::trunc);
+    fic << "P3" << endl << imgWidth << " " << imgHeight << endl << "255" << endl;
+
+    for (int y = 0; y < length; y++) {
+        for (int py = 0; py < PIXEL_SIZE; py++) {
+            for (int x = 0; x < length; x++) {
+                int entityId = grid[y * length + x];
+                int r, g, b;
+
+                if (entityId == -1) {
+                    r = g = b = 255;
+                } else {
+                    Entity* entity = game->getPopulation().get(entityId);
+                    Type t = entity->getType();
+
+                    switch (t) {
+                        case Type::rabbit: r = 0; g = 255; b = 0; break; // vert
+                        case Type::fox: r = 255; g = 0; b = 0; break; // rouge
+                        default: r = g = b = 128; break; // gris
+                    }
+                }
+
+                for (int px = 0; px < PIXEL_SIZE; px++) {
+                    fic << r << " " << g << " " << b << " ";
+                }
+            }
+
+            fic << endl;
+        }
+    }
+
+    fic.close();
+}
+
+
 string Console::toString(Type type) {
     switch (type) {
         case Type::rabbit:
@@ -29,6 +77,19 @@ string Console::toString(Type type) {
     return "NaN";
 }
 
+void Console::checkInput(string text, int& reponse) {
+    while (true) {
+        cout << text;
+        if (cin >> reponse) {
+            break;
+        } else {
+            cout << "Entrée non valide. Saisir un nombre." << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+    }
+}
+
 EntityParams Console::getParams() {
     EntityParams params;
 
@@ -36,19 +97,14 @@ EntityParams Console::getParams() {
     for (Type type : types) {
         string typeStr = toString(type);
         cout << " --- CONFIGURATION POUR LE TYPE " << typeStr << " ---" << endl;
-        int entityNumberStart, foodToReproduce, foodPerMove, foodValue, probReproduce, minFreeCases;
-        cout << "Saisir le nombre d'animals initiales : ";
-        cin >> entityNumberStart;
-        cout << "Saisir la valeur minimale de nourriture pour se reproduire : ";
-        cin >> foodToReproduce;
-        cout << "Saisir la nourriture donnée par mouvement : ";
-        cin >> foodPerMove;
-        cout << "Saisir la valeur en nourriture : ";
-        cin >> foodValue;
-        cout << "Saisir la probabilité pour se reproduite (En pourcentage) : ";
-        cin >> probReproduce;
-        cout << "Saisir le nombre minimale de cases vides aux alentours de l'entité pour se reproduire : ";
-        cin >> minFreeCases;
+        int entityNumberStart, foodToReproduce, foodInit, foodPerMove, foodValue, probReproduce, minFreeCases;
+        checkInput("Saisir le nombre d'animals initiales : ", entityNumberStart);
+        checkInput("Saisir la nourriture initiale de l'entité : ", foodInit);
+        checkInput("Saisir la valeur minimale de nourriture pour se reproduire : ", foodToReproduce);
+        checkInput("Saisir la nourriture donnée par mouvement : ", foodPerMove);
+        checkInput("Saisir la valeur en nourriture : ", foodValue);
+        checkInput("Saisir la probabilité pour se reproduite (En pourcentage) : ", probReproduce);
+        checkInput("Saisir le nombre minimale de cases vides aux alentours de l'entité pour se reproduire : ", minFreeCases);
         
         vector<Type> preys;
         while (true) {
@@ -69,7 +125,7 @@ EntityParams Console::getParams() {
             cout << "Le type " << toString(choix) << " est enregistré comme proie de " << typeStr << "!" << endl;
         }
 
-        TypeParams typeParams(entityNumberStart, foodToReproduce, foodPerMove, foodValue, probReproduce, foodValue, probReproduce, preys);
+        TypeParams typeParams(entityNumberStart, foodInit, foodToReproduce, foodPerMove, foodValue, probReproduce, minFreeCases, preys);
         params.addType(type, typeParams);
         cout << " --- CONFIGURATION DE " << typeStr << " ENREGISTRÉ! ---" << endl;
     }
@@ -89,10 +145,9 @@ void Console::start() {
     cout << "NEXT STEPS :" << endl;
 
     while (true) {
-        game->moveType(Type::rabbit);
+        game->next();
         print();
-        game->moveType(Type::fox);
-        print();
+        drawGrid();
         cout << game->getPopulation().getEntities().size() << " ENTITIES." << endl;
         int nextMove;
         cout << "Appuyer -1 pour sortir, ou un autre nombre sinon : ";
