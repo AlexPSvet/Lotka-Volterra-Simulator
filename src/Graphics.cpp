@@ -29,6 +29,15 @@ void Graphics::draw(Population p, RenderWindow &w) {
 
 void Graphics::start() {
     Console console;
+
+    // Descomentar en caso de Emergencia
+    // EntityParams params;
+    // TypeParams foxParams(7, 20, 15, 10, 5, 20, 7, {Type::rabbit});
+    // params.addType(Type::fox, foxParams);
+    //
+    // TypeParams rabbitParams(20, 50, 10, 4,10, 30, 1, {});
+    // params.addType(Type::rabbit, rabbitParams);
+
     EntityParams params = console.getParams();
 
     Game game(params, TAILLE_GRID*TAILLE_GRID);
