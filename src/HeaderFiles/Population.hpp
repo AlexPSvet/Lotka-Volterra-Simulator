@@ -13,6 +13,7 @@ class TypeParams {
             int entityInit,
             int foodInit,
             int foodToReproduceLevel,
+            int foodPerMove,
             int foodValue,
             int probReproduce,
             int minFreeBirth,
@@ -22,6 +23,7 @@ class TypeParams {
         int getEntityInit();
         int getFoodInit();
         int getFoodToReproduce();
+        int getFoodPerMove();
         int getFoodValue();
         int getProbToReproduce();
         int getMinFreeBirth();
@@ -32,6 +34,7 @@ class TypeParams {
         const int entityInit;
         const int foodInit;
         const int foodToReproduceLevel;
+        const int foodPerMove;
         const int foodValue;
         const int probReproduce;
         const int minFreeBirth;

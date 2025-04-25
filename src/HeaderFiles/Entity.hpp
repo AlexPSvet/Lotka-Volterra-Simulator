@@ -2,10 +2,12 @@
 #define ENTITY_HPP
 
 #include "Coord.hpp"
+#include <vector>
 #include <iostream>
 using namespace std;
 
 enum class Type { rabbit, fox };
+extern const vector<Type> ALL_TYPES;
 
 class Entity {
     public:
@@ -26,6 +28,7 @@ class Entity {
         void setType(Type type);
         void setAge(int age);
         void setFoodLevel(int foodLevel);
+        void addFood(int food);
         void setCoord(Coord coord);
         void setActive(bool value);
 

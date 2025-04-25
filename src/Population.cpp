@@ -4,6 +4,7 @@ TypeParams::TypeParams(
     int entityInit,
     int foodInit,
     int foodToReproduceLevel,
+    int foodPerMove,
     int foodValue,
     int probReproduce,
     int minFreeBirth,
@@ -11,6 +12,7 @@ TypeParams::TypeParams(
     entityInit(entityInit), 
     foodInit(foodInit),
     foodToReproduceLevel(foodToReproduceLevel),
+    foodPerMove(foodPerMove),
     foodValue(foodValue),
     probReproduce(probReproduce),
     minFreeBirth(minFreeBirth) 
@@ -28,6 +30,10 @@ int TypeParams::getFoodInit() {
 
 int TypeParams::getFoodToReproduce() {
     return foodToReproduceLevel;
+}
+
+int TypeParams::getFoodPerMove() {
+    return foodPerMove;
 }
 
 int TypeParams::getFoodValue() {
@@ -92,7 +98,7 @@ void Population::set(int id, int coord) {
     entity->setActive(true);
     int foodLevel = params->getTypeParams(entity->getType()).getFoodInit();
     entity->setFoodLevel(foodLevel);
-    grid.setCase(coord, id);
+    grid.setValue(coord, id);
 }
 
 void Population::supprime(int id) {
@@ -100,9 +106,9 @@ void Population::supprime(int id) {
         Entity* entity = entities[i];
         Coord coord = entity->getCoord();
         if (entity->getId() == id) {
-            entities.erase(entities.begin() + i);
             delete entity;
-            grid.emptyCase(coord.toInt());
+            entities.erase(entities.begin() + i);
+            grid.voidCase(coord.toInt());
             return;
         }
     }

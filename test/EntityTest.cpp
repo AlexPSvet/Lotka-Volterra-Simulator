@@ -43,5 +43,5 @@ TEST_CASE("Entity setters and coord") {
     CHECK(e.getCoord() == c);
     CHECK(e.getAge() == 5);
     CHECK(e.getFoodLevel() == 8);
-    CHECK(e.isActive() == true);
+    CHECK(e.isActive());
 }

@@ -26,20 +26,16 @@ struct Coord {
         int x, y;
 };
 
-class Grid {
+class Grid : public Ensemble {
     public:
         Grid(int taille);
 
-        void emptyCase(int i);
-        int getValue(int i) const;
-
         void voidCase(int i);
-        void setCase(int i, int value);
 
         Ensemble getEmptyCases();
-        Ensemble& getEnsemble();
+        int getGridLenght();
     private:
-        Ensemble grid;
+        int gridLenght;
 };
 
 #endif
