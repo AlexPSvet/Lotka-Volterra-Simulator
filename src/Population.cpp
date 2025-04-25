@@ -74,7 +74,7 @@ void EntityParams::addType(Type type, TypeParams params) {
     typeParams.push_back(params);
 }
 
-Population::Population(int taille) : grid(Grid{taille}) {}
+Population::Population(EntityParams params, int taille) : grid(Grid{taille}), params(params) {}
 
 Entity* Population::get(int id) {
     for (Entity* entity : entities) {
@@ -96,7 +96,7 @@ void Population::set(int id, int coord) {
     Entity* entity = get(id);
     entity->setCoord(coord);
     entity->setActive(true);
-    int foodLevel = params->getTypeParams(entity->getType()).getFoodInit();
+    int foodLevel = params.getTypeParams(entity->getType()).getFoodInit();
     entity->setFoodLevel(foodLevel);
     grid.setValue(coord, id);
 }
@@ -122,15 +122,11 @@ void Population::clear() {
     entities.clear();
 }
 
-void Population::setEntityParams(EntityParams* entityParams) {
-    params = entityParams;
-}
-
 vector<Entity*>& Population::getEntities() {
     return entities;
 }
 
-EntityParams* Population::getParams() {
+EntityParams& Population::getParams() {
     return params;
 }
 

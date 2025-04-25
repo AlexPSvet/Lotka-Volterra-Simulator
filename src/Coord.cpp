@@ -45,9 +45,9 @@ bool Coord::operator!=(const Coord& c) {
 
 Ensemble Coord::neighbours() {
     Ensemble c;
-    for (int i = std::max(x - 1, 0); i <= std::min(x + 1, TAILLE_GRID - 1); i++) {
+    for (int i = max(x - 1, 0); i <= min(x + 1, TAILLE_GRID - 1); i++) {
         for (int j = max(y - 1, 0); j <= min(y + 1, TAILLE_GRID - 1); j++) {
-            if (x != i && y != j && x != j && y != i) {
+            if (!(x == i && y == j)) {
                 c.ajoute(Coord {i,j}.toInt());
             }
         }

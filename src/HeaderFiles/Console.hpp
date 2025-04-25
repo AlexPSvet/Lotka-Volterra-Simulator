@@ -14,10 +14,16 @@ using namespace std;
 class Console {
     public:
         void start();
+        void stop();
+
+        void setParams();
+        void setGame(Game* game);
+        
+        Game* getGame();
     private:
+        bool simulation();
         void print();
         void drawGrid();
-        EntityParams getParams();
 
         void checkInput(string text, int& reponse);
         string toString(Type type);

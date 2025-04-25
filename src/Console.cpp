@@ -90,7 +90,7 @@ void Console::checkInput(string text, int& reponse) {
     }
 }
 
-EntityParams Console::getParams() {
+void Console::setParams() {
     EntityParams params;
 
     vector<Type> types = ALL_TYPES;
@@ -130,14 +130,44 @@ EntityParams Console::getParams() {
         cout << " --- CONFIGURATION DE " << typeStr << " ENREGISTRÉ! ---" << endl;
     }
 
-    return params;
+    game = new Game(params, TAILLE_GRID);
+}
+
+void Console::setGame(Game* game) {
+    this->game = game;
+}
+
+bool Console::simulation() {
+    while (true) {
+        game->next();
+        print();
+        drawGrid();
+        cout << game->getPopulation().getEntities().size() << " ENTITIES." << endl;
+        int nextMove;
+        cout << "Appuyer -1 pour redémarrer la simulation, -2 pour sortir, ou un autre nombre sinon : ";
+        cin >> nextMove;
+        if (nextMove == -1) {
+            return true;
+        } else if (nextMove == -2) {
+            return false;
+        }
+    }
 }
 
 void Console::start() {
-    EntityParams params = getParams();
+    // Default params
+    EntityParams params;
+    TypeParams rabbitParams(20, 5, 15, 1, 2, 65, 3, {});
+    TypeParams foxParams(15, 5, 15, -1, 2, 65, 3, {Type::rabbit});
+    params.addType(Type::rabbit, rabbitParams);
+    params.addType(Type::fox, foxParams);
+    
     game = new Game(params, TAILLE_GRID);
+    // Custom params
+    // setParams();
 
     game->start();
+    
     cout << game->getPopulation().getEntities().size() << " ENTITIES." << endl;
 
     cout << "GAME START :" << endl;
@@ -145,20 +175,20 @@ void Console::start() {
     cout << "NEXT STEPS :" << endl;
 
     while (true) {
-        game->next();
-        print();
-        drawGrid();
-        cout << game->getPopulation().getEntities().size() << " ENTITIES." << endl;
-        int nextMove;
-        cout << "Appuyer -1 pour sortir, ou un autre nombre sinon : ";
-        cin >> nextMove;
-        if (nextMove == -1) {
+        if (!simulation()) {
+            game->stop();
             break;
         }
+        game->stop();
     }
-    
-    cout << "EXIT..." << endl;
 
-    game->stop();
+    stop();
+}
+
+void Console::stop() {
     delete game;
+}
+
+Game* Console::getGame() {
+    return game;
 }

@@ -1,8 +1,6 @@
 #include "Game.hpp"
 
-Game::Game(EntityParams& params, int taille) : population(Population{taille}) {
-    population.setEntityParams(&params);
-}
+Game::Game(EntityParams params, int taille) : population(Population{params, taille}) {}
 
 int Game::ajouteAnimal(Type type, int age, int coord) {
     int id = population.reserve(type, age);
@@ -11,10 +9,10 @@ int Game::ajouteAnimal(Type type, int age, int coord) {
 }
 
 void Game::setEntityInit() {
-    EntityParams* params = population.getParams();
+    EntityParams& params = population.getParams();
     Ensemble emptyCases = population.getGrid().getEmptyCases();
-    for (Type type : params->getTypes()) {
-        TypeParams typeParams = params->getTypeParams(type);
+    for (Type type : params.getTypes()) {
+        TypeParams typeParams = params.getTypeParams(type);
         int init = typeParams.getEntityInit();
         for (int i = 0; i < init; i++) {
             int randomIndex = rand() % emptyCases.cardinal();
@@ -55,7 +53,8 @@ Ensemble Game::typeNeighbours(Coord cord, Type type) {
     Ensemble neighboursType;
     Grid& grid = population.getGrid();
     for (int i=0; i < neighbours.cardinal(); i++) {
-        int id = grid[neighbours[i]];
+        int indice = neighbours[i];
+        int id = grid[indice];
         if (id != -1) {
             Entity* entity = population.get(id);
             if (entity->getType() == type) {
@@ -67,7 +66,7 @@ Ensemble Game::typeNeighbours(Coord cord, Type type) {
 }
 
 void Game::move(Entity* entity, int oldCoord, int newCoord) {
-    TypeParams typeParams = population.getParams()->getTypeParams(entity->getType());
+    TypeParams typeParams = population.getParams().getTypeParams(entity->getType());
     population.getGrid().voidCase(oldCoord);
     population.getGrid().setValue(newCoord, entity->getId());
     entity->setCoord(newCoord);
@@ -85,13 +84,26 @@ void Game::moveRandom(Entity* entity){
     // Move entity to random neighbour coordinate.
     int ind = rand() % neighbours.cardinal();
     move(entity, currentCoord.toInt(), neighbours[ind]);
+
+    Type type = entity->getType();
+    TypeParams typeParams = population.getParams().getTypeParams(type);
+    int minFreeBirth = typeParams.getMinFreeBirth();
+    int foodToReproduce = typeParams.getFoodToReproduce();
+    if (neighbours.cardinal() >= minFreeBirth && entity->getFoodLevel() >= foodToReproduce) {
+        int probRepro = typeParams.getProbToReproduce();
+        int random = rand() % 100;
+        if (random <= probRepro) {
+            ajouteAnimal(type, 0, currentCoord.toInt());
+            entity->addFood(-foodToReproduce);
+        }
+    }
 }
 
 void Game::eatPrey(Entity* entity, int preyId) {
     Entity* prey = population.get(preyId);
     Coord preyCoord = prey->getCoord();
     Type preyType = prey->getType();
-    TypeParams params = population.getParams()->getTypeParams(preyType);
+    TypeParams params = population.getParams().getTypeParams(preyType);
     entity->addFood(params.getFoodValue());
     population.supprime(preyId);
     move(entity, entity->getCoord().toInt(), preyCoord.toInt());
@@ -100,7 +112,7 @@ void Game::eatPrey(Entity* entity, int preyId) {
 void Game::moveEntity(Entity* entity) {
     Coord coord = entity->getCoord();
     Type type = entity->getType();
-    TypeParams typeParams = population.getParams()->getTypeParams(type);
+    TypeParams typeParams = population.getParams().getTypeParams(type);
     Ensemble neighbours = emptyNeighbours(coord);
 
     // If no neighbours, can't move.
@@ -127,16 +139,6 @@ void Game::moveEntity(Entity* entity) {
 
     // If not, move and reproduce if possible.
     moveRandom(entity);
-    int minFreeBirth = typeParams.getMinFreeBirth();
-    int foodToReproduce = typeParams.getFoodToReproduce();
-    if (neighbours.cardinal() >= minFreeBirth && entity->getFoodLevel() >= foodToReproduce) {
-        int probRepro = typeParams.getProbToReproduce();
-        int random = rand() % 100;
-        if (random <= probRepro) {
-            ajouteAnimal(type, 0, coord.toInt());
-        }
-        entity->setFoodLevel(entity->getFoodLevel() - foodToReproduce);
-    }
 }
 
 void Game::moveType(Type type) {
