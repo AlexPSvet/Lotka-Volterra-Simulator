@@ -91,9 +91,9 @@ void Game::eatPrey(Entity* entity, int preyId) {
     Entity* prey = population.get(preyId);
     Coord preyCoord = prey->getCoord();
     Type preyType = prey->getType();
-    population.supprime(preyId);
     TypeParams params = population.getParams()->getTypeParams(preyType);
-    entity->setFoodLevel(entity->getFoodLevel() + params.getFoodValue());
+    entity->addFood(params.getFoodValue());
+    population.supprime(preyId);
     move(entity, entity->getCoord().toInt(), preyCoord.toInt());
 }
 

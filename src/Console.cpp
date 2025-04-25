@@ -88,11 +88,18 @@ void Console::start() {
     print();
     cout << "NEXT STEPS :" << endl;
 
-    for (int i = 0; i < 50; i++) {
+    while (true) {
         game->moveType(Type::rabbit);
+        print();
         game->moveType(Type::fox);
         print();
         cout << game->getPopulation().getEntities().size() << " ENTITIES." << endl;
+        int nextMove;
+        cout << "Appuyer -1 pour sortir, ou un autre nombre sinon : ";
+        cin >> nextMove;
+        if (nextMove == -1) {
+            break;
+        }
     }
     
     cout << "EXIT..." << endl;
