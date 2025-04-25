@@ -7,7 +7,7 @@
 
 class Game {
     public:
-        Game(EntityParams& params, int taille);
+        Game(EntityParams params, int taille);
 
         int ajouteAnimal(Type type, int age, int coord);
         void setEntityInit();

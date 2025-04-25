@@ -1,8 +1,6 @@
-#include "HeaderFiles/Graphics.hpp"
-#include "Console.hpp"
-#include "Game.hpp"
+#include "Graphics.hpp"
 
-void Graphics::draw_point(RenderWindow &w, Point pos, Color color) {
+void Graphics::draw_point(RenderWindow &w, Vector2f pos, Color color) {
     RectangleShape cell(Vector2f(CELL_SIZE, CELL_SIZE));
     cell.setPosition(pos);
     cell.setFillColor(color);
@@ -28,17 +26,12 @@ void Graphics::draw(Population p, RenderWindow &w) {
 }
 
 void Graphics::start() {
-    Console console;
-
     // Descomentar en caso de Emergencia
-    // EntityParams params;
-    // TypeParams foxParams(7, 20, 15, 10, 5, 20, 7, {Type::rabbit});
-    // params.addType(Type::fox, foxParams);
-    //
-    // TypeParams rabbitParams(20, 50, 10, 4,10, 30, 1, {});
-    // params.addType(Type::rabbit, rabbitParams);
-
-    EntityParams params = console.getParams();
+    EntityParams params;
+    TypeParams rabbitParams(20, 5, 15, 1, 2, 65, 3, {});
+    TypeParams foxParams(15, 5, 15, -1, 2, 65, 3, {Type::rabbit});
+    params.addType(Type::rabbit, rabbitParams);
+    params.addType(Type::fox, foxParams);
 
     Game game(params, TAILLE_GRID*TAILLE_GRID);
     game.start();
