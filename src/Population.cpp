@@ -120,6 +120,7 @@ void Population::clear() {
         delete entity;
     }
     entities.clear();
+    grid.restartGrid();
 }
 
 vector<Entity*>& Population::getEntities() {

@@ -7,7 +7,6 @@ void Graphics::draw_point(RenderWindow &w, Vector2f pos, Color color, Vector2f o
     w.draw(cell);
 }
 
-
 void Graphics::draw(Population p, RenderWindow &w, Vector2f offset, float cellSize) {
     const vector<Entity*> entities = p.getEntities();
     for (auto entity : entities) {
@@ -45,7 +44,6 @@ void Graphics::start(RenderWindow &window) {
     Simulator.setPosition(Vector2f(270.f, 270.f));
     Simulator.setFillColor(Color::White);
 
-
     const float simulatorSize = 600.f;
     const int gridSize = TAILLE_GRID;
     const float cellSize = simulatorSize / gridSize;
@@ -74,7 +72,6 @@ void Graphics::start(RenderWindow &window) {
         window.display();
     }
 }
-
 
 void Graphics::menu() {
     RenderWindow window(VideoMode({WINDOW_SIZE,WINDOW_SIZE}), "Simulation");

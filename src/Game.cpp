@@ -1,5 +1,4 @@
-#include "HeaderFiles/Game.hpp"
-#include "HeaderFiles/Coord.hpp"
+#include "Game.hpp"
 
 Game::Game(EntityParams params, int taille) : population(Population{params, taille}) {}
 
@@ -16,6 +15,10 @@ void Game::setEntityInit() {
         TypeParams typeParams = params.getTypeParams(type);
         int init = typeParams.getEntityInit();
         for (int i = 0; i < init; i++) {
+            int cardinal = emptyCases.cardinal();
+            if (cardinal == 0) {
+                return;
+            }
             int randomIndex = rand() % emptyCases.cardinal();
             int coord = emptyCases[randomIndex];
             // Il faut rajouter apres l'age pour les entites.
@@ -95,7 +98,7 @@ void Game::moveRandom(Entity* entity){
         int random = rand() % 100;
         if (random <= probRepro) {
             ajouteAnimal(type, 0, currentCoord.toInt());
-            entity->addFood(-foodToReproduce);
+            // entity->addFood(-foodToReproduce); Need to see...
         }
     }
 }

@@ -5,15 +5,15 @@ Ensemble::Ensemble() {
 }
 
 std::ostream& Ensemble::operator<<(std::ostream& out) {
-	out<<"{ ";
+	out << "{ ";
 	for (int i = 0; i < card; i++) {
 		out << t[i];
-		if (i+1 >= card) {
-		out << " }";
-		} else {
-		out << ", ";
+		if (i+1 < card) {
+			out << ", ";
 		}
-	} return out;
+	}
+	out << " }"; 
+	return out;
 }
 
 int Ensemble::operator[](int i) const {
@@ -53,13 +53,15 @@ void Ensemble::erase(int i) {
 	card--;
 }
 
-void Ensemble::remove(int o) {
-	for (int i = 0; i < card; i++) {
-		if (t[i] == o) {
-			erase(i);
-			break;
-		}
-	}
+void Ensemble::set(int value, int amount) {
+    for (int i = 0; i < amount; i++) {
+        t[i] = value;
+    }
+	card = amount;
+}
+
+void Ensemble::clear() {
+	card = 0;
 }
 
 int Ensemble::tire() {
