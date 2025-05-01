@@ -48,7 +48,7 @@ void Graphics::graphEvolution(RenderWindow &w, Population p, float turn, Vector2
 
     float max_y = 1.f;
     for (size_t i = 0; i < rabbitsHistory.size(); ++i) {
-        max_y = std::max({max_y, rabbitsHistory[i], foxesHistory[i]});
+        max_y = std::max(max_y, std::max(rabbitsHistory[i], foxesHistory[i]));
     }
 
     VertexArray axes(PrimitiveType::Lines, 4);
@@ -80,8 +80,31 @@ void Graphics::start(RenderWindow &window) {
     float turn = 0;
 
     EntityParams params;
-    TypeParams rabbitParams(20, 5, 15, 1, 2, 65, 3, {});
-    TypeParams foxParams(15, 5, 15, -1, 2, 65, 3, {Type::rabbit});
+
+    TypeParams rabbitParams(
+        40,   // entityInit
+        10,   // foodMin
+        20,   // foodMax
+        15,   // foodToReproduceLevel
+        1,    // foodPerMove
+        5,    // foodValue
+        40,   // probReproduce
+        1,    // minFreeBirth
+        {}    // preys
+    );
+
+    TypeParams foxParams(
+        20,               // entityInit
+        20,               // foodMin
+        30,               // foodMax
+        25,               // foodToReproduceLevel
+        -1,               // foodPerMove
+        15,               // foodValue
+        50,               // probReproduce
+        2,                // minFreeBirth
+        {Type::rabbit}    // preys
+    );
+
     params.addType(Type::rabbit, rabbitParams);
     params.addType(Type::fox, foxParams);
 

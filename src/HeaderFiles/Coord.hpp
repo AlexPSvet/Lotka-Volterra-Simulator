@@ -4,7 +4,7 @@
 #include "Ensemble.hpp"
 using namespace std;
 
-const int TAILLE_GRID = 15;
+const int TAILLE_GRID = 10;
 
 struct Coord {
     public:
