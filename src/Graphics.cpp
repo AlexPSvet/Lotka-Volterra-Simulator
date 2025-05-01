@@ -75,7 +75,7 @@ void Graphics::graphEvolution(RenderWindow &w, Population p, float turn, Vector2
 
     float max_y = 1.f;
     for (size_t i = 0; i < rabbitsHistory.size(); ++i) {
-        max_y = std::max({max_y, rabbitsHistory[i], foxesHistory[i]});
+        max_y = std::max(max_y, std::max(rabbitsHistory[i], foxesHistory[i]));
     }
 
     VertexArray axes(PrimitiveType::Lines, 4);
