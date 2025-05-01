@@ -1,4 +1,10 @@
-#include "Graphics.hpp"
+#include "HeaderFiles/Graphics.hpp"
+
+Graphics::Graphics() {
+    if (!rabbitTexture.loadFromFile("../Assets/bugs.png")) {
+        std::cerr << "Error: no se pudo cargar la imagen del conejo." << std::endl;
+    }
+}
 
 void Graphics::draw_point(RenderWindow &w, Vector2f pos, Color color, Vector2f offset, float cellSize) {
     RectangleShape cell(Vector2f(cellSize, cellSize));
@@ -17,7 +23,12 @@ void Graphics::draw(Population p, RenderWindow &w, Vector2f offset, float cellSi
         float py = y * cellSize;
 
         if (entity->getType() == Type::rabbit) {
-            draw_point(w, {px, py}, Color::Blue, offset, cellSize);
+            Sprite bugs(rabbitTexture);
+            float scaleX = cellSize / rabbitTexture.getSize().x;
+            float scaleY = cellSize / rabbitTexture.getSize().y;
+            bugs.setScale({scaleX, scaleY});
+            bugs.setPosition({px + offset.x, py + offset.y});
+            w.draw(bugs);
         } else {
             draw_point(w, {px, py}, Color::Red, offset, cellSize);
         }
