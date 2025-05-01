@@ -109,25 +109,25 @@ void Graphics::start(RenderWindow &window) {
     EntityParams params;
 
     TypeParams rabbitParams(
-        100,   // entityInit
+        30,   // entityInit
         10,   // foodMin
         20,   // foodMax
         10,   // foodToReproduceLevel
         0,    // foodPerMove
-        3,    // foodValue
+        7,    // foodValue
         25,   // probReproduce
-        5,    // minFreeBirth
+        3,    // minFreeBirth
         {}    // preys
     );
 
     TypeParams foxParams(
-        100,               // entityInit
+        30,               // entityInit
         20,               // foodMin
         30,               // foodMax
-        25,               // foodToReproduceLevel
-        0,               // foodPerMove
+        15,               // foodToReproduceLevel
+        -1,               // foodPerMove
         15,               // foodValue
-        25,               // probReproduce
+        40,               // probReproduce
         5,                // minFreeBirth
         {Type::rabbit}    // preys
     );
