@@ -4,7 +4,7 @@
 #include "Ensemble.hpp"
 using namespace std;
 
-const int TAILLE_GRID = 10;
+const int TAILLE_GRID = 100;
 
 struct Coord {
     public:
@@ -31,6 +31,7 @@ class Grid : public Ensemble {
         Grid(int taille);
 
         void voidCase(int i);
+        void restartGrid();
 
         Ensemble getEmptyCases();
         int getGridLenght();

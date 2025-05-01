@@ -57,13 +57,16 @@ Ensemble Coord::neighbours() {
 
 Grid::Grid(int lenght) {
     gridLenght = lenght;
-    for (int i = 0; i < lenght * lenght; i++) {
-        ajoute(-1);
-    }
+    restartGrid();
 }
 
 void Grid::voidCase(int i) {
     setValue(i, -1);
+}
+
+void Grid::restartGrid() {
+    clear();
+    set(-1, gridLenght * gridLenght);
 }
 
 Ensemble Grid::getEmptyCases() {

@@ -2,7 +2,8 @@
 
 TypeParams::TypeParams(
     int entityInit,
-    int foodInit,
+    int foodMin,
+    int foodMax,
     int foodToReproduceLevel,
     int foodPerMove,
     int foodValue,
@@ -10,7 +11,8 @@ TypeParams::TypeParams(
     int minFreeBirth,
     vector<Type> p) : 
     entityInit(entityInit), 
-    foodInit(foodInit),
+    foodMin(foodMin),
+    foodMax(foodMax),
     foodToReproduceLevel(foodToReproduceLevel),
     foodPerMove(foodPerMove),
     foodValue(foodValue),
@@ -24,8 +26,12 @@ int TypeParams::getEntityInit() {
     return entityInit;
 }
 
-int TypeParams::getFoodInit() {
-    return foodInit;
+int TypeParams::getFoodMin() {
+    return foodMin;
+}
+
+int TypeParams::getFoodMax() {
+    return foodMax;
 }
 
 int TypeParams::getFoodToReproduce() {
@@ -96,7 +102,13 @@ void Population::set(int id, int coord) {
     Entity* entity = get(id);
     entity->setCoord(coord);
     entity->setActive(true);
-    int foodLevel = params.getTypeParams(entity->getType()).getFoodInit();
+
+
+    TypeParams& typeParams = params.getTypeParams(entity->getType());
+    int minFood = typeParams.getFoodMin();
+    int maxFood = typeParams.getFoodMax();
+    int foodLevel = minFood + rand() % (maxFood - minFood);
+    
     entity->setFoodLevel(foodLevel);
     grid.setValue(coord, id);
 }
@@ -120,6 +132,7 @@ void Population::clear() {
         delete entity;
     }
     entities.clear();
+    grid.restartGrid();
 }
 
 vector<Entity*>& Population::getEntities() {

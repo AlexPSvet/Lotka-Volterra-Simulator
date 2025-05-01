@@ -66,7 +66,6 @@ void Console::drawGrid() {
     fic.close();
 }
 
-
 string Console::toString(Type type) {
     switch (type) {
         case Type::rabbit:
@@ -97,9 +96,10 @@ void Console::setParams() {
     for (Type type : types) {
         string typeStr = toString(type);
         cout << " --- CONFIGURATION POUR LE TYPE " << typeStr << " ---" << endl;
-        int entityNumberStart, foodToReproduce, foodInit, foodPerMove, foodValue, probReproduce, minFreeCases;
+        int entityNumberStart, foodToReproduce, foodMin, foodMax, foodPerMove, foodValue, probReproduce, minFreeCases;
         checkInput("Saisir le nombre d'animals initiales : ", entityNumberStart);
-        checkInput("Saisir la nourriture initiale de l'entité : ", foodInit);
+        checkInput("Saisir la valeur minimale de nourriture de l'entité : ", foodMin);
+        checkInput("Saisir la valeur maximale de nourriture de l'entité : ", foodMax);
         checkInput("Saisir la valeur minimale de nourriture pour se reproduire : ", foodToReproduce);
         checkInput("Saisir la nourriture donnée par mouvement : ", foodPerMove);
         checkInput("Saisir la valeur en nourriture : ", foodValue);
@@ -125,7 +125,7 @@ void Console::setParams() {
             cout << "Le type " << toString(choix) << " est enregistré comme proie de " << typeStr << "!" << endl;
         }
 
-        TypeParams typeParams(entityNumberStart, foodInit, foodToReproduce, foodPerMove, foodValue, probReproduce, minFreeCases, preys);
+        TypeParams typeParams(entityNumberStart, foodMin, foodMax, foodToReproduce, foodPerMove, foodValue, probReproduce, minFreeCases, preys);
         params.addType(type, typeParams);
         cout << " --- CONFIGURATION DE " << typeStr << " ENREGISTRÉ! ---" << endl;
     }
@@ -137,28 +137,54 @@ void Console::setGame(Game* game) {
     this->game = game;
 }
 
-bool Console::simulation() {
+void Console::simulation() {
+    game->start();
     while (true) {
-        game->next();
         print();
         drawGrid();
-        cout << game->getPopulation().getEntities().size() << " ENTITIES." << endl;
         int nextMove;
         cout << "Appuyer -1 pour redémarrer la simulation, -2 pour sortir, ou un autre nombre sinon : ";
         cin >> nextMove;
         if (nextMove == -1) {
-            return true;
+            game->stop();
+            game->start();
+            continue;
         } else if (nextMove == -2) {
-            return false;
+            game->stop();
+            return;
         }
+        game->next();
     }
 }
 
 void Console::start() {
     // Default params
     EntityParams params;
-    TypeParams rabbitParams(20, 5, 15, 1, 2, 65, 3, {});
-    TypeParams foxParams(15, 5, 15, -1, 2, 65, 3, {Type::rabbit});
+
+    TypeParams rabbitParams(
+        100,  // entityInit : 100 lapins au début (ils se reproduisent vite)
+        10,  // foodInit : 200 unités d'herbe initiale
+        20,
+        50,   // foodToReproduceLevel : besoin de 10 unités de nourriture pour se reproduire
+        1,    // foodPerMove : coûte 1 unité de nourriture pour chaque mouvement
+        5,    // foodValue : chaque herbe rapporte 5 unités
+        40,   // probReproduce : 40% de chance de reproduction après atteindre le niveau
+        1,    // minFreeBirth : besoin d'au moins 1 case libre pour se reproduire
+        {}    // preys : le lapin ne chasse personne (herbivore)
+    );
+
+    TypeParams foxParams(
+        50,   // entityInit : 50 renards au début (moins nombreux)
+        20,    // foodInit : 0 nourriture initiale (renards chassent uniquement des lapins)
+        30,
+        30,   // foodToReproduceLevel : besoin de 30 unités de nourriture accumulées pour se reproduire
+        -1,   // foodPerMove : chaque déplacement coûte 1 unités (plus énergivore que le lapin)
+        15,   // foodValue : chaque lapin mangé donne 15 unités d'énergie
+        50,   // probReproduce : 20% de chance de reproduction après seuil atteint
+        2,    // minFreeBirth : au moins 2 cases libres pour donner naissance
+        {Type::rabbit} // preys : le renard chasse le type `Rabbit`
+    );
+
     params.addType(Type::rabbit, rabbitParams);
     params.addType(Type::fox, foxParams);
     
@@ -166,21 +192,7 @@ void Console::start() {
     // Custom params
     // setParams();
 
-    game->start();
-    
-    cout << game->getPopulation().getEntities().size() << " ENTITIES." << endl;
-
-    cout << "GAME START :" << endl;
-    print();
-    cout << "NEXT STEPS :" << endl;
-
-    while (true) {
-        if (!simulation()) {
-            game->stop();
-            break;
-        }
-        game->stop();
-    }
+    simulation();
 
     stop();
 }

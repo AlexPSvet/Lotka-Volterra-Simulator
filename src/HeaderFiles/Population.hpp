@@ -11,7 +11,8 @@ class TypeParams {
     public:
         TypeParams(
             int entityInit,
-            int foodInit,
+            int foodMin,
+            int foodMax,
             int foodToReproduceLevel,
             int foodPerMove,
             int foodValue,
@@ -21,7 +22,8 @@ class TypeParams {
         );
 
         int getEntityInit();
-        int getFoodInit();
+        int getFoodMin();
+        int getFoodMax();
         int getFoodToReproduce();
         int getFoodPerMove();
         int getFoodValue();
@@ -32,7 +34,8 @@ class TypeParams {
         bool isPrey(Type type);
     private:
         const int entityInit;
-        const int foodInit;
+        const int foodMin;
+        const int foodMax;
         const int foodToReproduceLevel;
         const int foodPerMove;
         const int foodValue;

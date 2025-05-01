@@ -1,5 +1,4 @@
-#include "HeaderFiles/Game.hpp"
-#include "HeaderFiles/Coord.hpp"
+#include "Game.hpp"
 
 Game::Game(EntityParams params, int taille) : population(Population{params, taille}) {}
 
@@ -16,6 +15,10 @@ void Game::setEntityInit() {
         TypeParams typeParams = params.getTypeParams(type);
         int init = typeParams.getEntityInit();
         for (int i = 0; i < init; i++) {
+            int cardinal = emptyCases.cardinal();
+            if (cardinal == 0) {
+                return;
+            }
             int randomIndex = rand() % emptyCases.cardinal();
             int coord = emptyCases[randomIndex];
             // Il faut rajouter apres l'age pour les entites.
@@ -67,16 +70,19 @@ Ensemble Game::typeNeighbours(Coord cord, Type type) {
 }
 
 void Game::move(Entity* entity, int oldCoord, int newCoord) {
-    TypeParams typeParams = population.getParams().getTypeParams(entity->getType());
     population.getGrid().voidCase(oldCoord);
     population.getGrid().setValue(newCoord, entity->getId());
     entity->setCoord(newCoord);
-    entity->addFood(typeParams.getFoodPerMove());
 }
 
 void Game::moveRandom(Entity* entity){
+    Type type = entity->getType();
+    TypeParams typeParams = population.getParams().getTypeParams(type);
     Coord currentCoord = entity->getCoord();
     Ensemble neighbours = emptyNeighbours(currentCoord);
+
+    entity->addFood(typeParams.getFoodPerMove());
+
     // If no neighbours, can't move.
     if (neighbours.cardinal() == 0) {
         return;
@@ -86,16 +92,14 @@ void Game::moveRandom(Entity* entity){
     int ind = rand() % neighbours.cardinal();
     move(entity, currentCoord.toInt(), neighbours[ind]);
 
-    Type type = entity->getType();
-    TypeParams typeParams = population.getParams().getTypeParams(type);
     int minFreeBirth = typeParams.getMinFreeBirth();
     int foodToReproduce = typeParams.getFoodToReproduce();
-    if (neighbours.cardinal() >= minFreeBirth && entity->getFoodLevel() >= foodToReproduce) {
+    if (neighbours.cardinal() >= minFreeBirth && entity->getFoodLevel() > foodToReproduce) {
         int probRepro = typeParams.getProbToReproduce();
         int random = rand() % 100;
         if (random <= probRepro) {
             ajouteAnimal(type, 0, currentCoord.toInt());
-            entity->addFood(-foodToReproduce);
+            // entity->addFood(-foodToReproduce); Need to see...
         }
     }
 }
@@ -114,32 +118,28 @@ void Game::moveEntity(Entity* entity) {
     Coord coord = entity->getCoord();
     Type type = entity->getType();
     TypeParams typeParams = population.getParams().getTypeParams(type);
-    Ensemble neighbours = emptyNeighbours(coord);
 
-    // If no neighbours, can't move.
-    if (neighbours.cardinal() == 0) {
-        return;
+    // If he hasn't enough food to reproduce, and there are preys, then eat one of them.
+    if (entity->getFoodLevel() < typeParams.getFoodToReproduce()) {
+        for (Type preyType : typeParams.getPreys()) {
+            Ensemble preys = typeNeighbours(coord, preyType);
+            if (preys.cardinal() != 0) {
+                int ind = rand() % preys.cardinal();
+                int preyId = preys[ind];
+                eatPrey(entity, preyId);
+                return;
+            }
+        }
     }
+
+    // If not, simply move.
+    moveRandom(entity);
 
     // If entity has no food, it dies.
     if (entity->getFoodLevel() <= 0) {
         population.supprime(entity->getId());
         return;
     }
-
-    // If preys, then eat one of them.
-    for (Type preyType : typeParams.getPreys()) {
-        Ensemble preys = typeNeighbours(coord, preyType);
-        if (preys.cardinal() != 0) {
-            int ind = rand() % preys.cardinal();
-            int preyId = preys[ind];
-            eatPrey(entity, preyId);
-            return;
-        }
-    }
-
-    // If not, move and reproduce if possible.
-    moveRandom(entity);
 }
 
 void Game::moveType(Type type) {

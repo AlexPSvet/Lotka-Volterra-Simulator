@@ -21,7 +21,7 @@ class Console {
         
         Game* getGame();
     private:
-        bool simulation();
+        void simulation();
         void print();
         void drawGrid();
 
