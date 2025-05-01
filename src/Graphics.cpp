@@ -109,7 +109,7 @@ void Graphics::start(RenderWindow &window) {
     EntityParams params;
 
     TypeParams rabbitParams(
-        30,   // entityInit
+        100,   // entityInit
         10,   // foodMin
         20,   // foodMax
         10,   // foodToReproduceLevel
@@ -121,7 +121,7 @@ void Graphics::start(RenderWindow &window) {
     );
 
     TypeParams foxParams(
-        30,               // entityInit
+        100,               // entityInit
         20,               // foodMin
         30,               // foodMax
         15,               // foodToReproduceLevel
@@ -170,7 +170,7 @@ void Graphics::start(RenderWindow &window) {
         window.clear(Color::White);
         window.draw(sprite);
         window.draw(Simulator);
-        draw(game.getPopulation(), window, Simulator.getPosition(), 600 / TAILLE_GRID);
+        draw(game.getPopulation(), window, Simulator.getPosition(), 600 / gridSize);
         window.draw(graphEvo);
         graphEvolution(window, game.getPopulation(), turn, graphEvo.getPosition());
         game.next();
