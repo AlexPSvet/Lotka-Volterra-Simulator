@@ -1,7 +1,7 @@
 #include "Graphics.hpp"
 
-void Graphics::draw_point(RenderWindow &w, Vector2f pos, Color color, Vector2f offset) {
-    RectangleShape cell(Vector2f(60, 60));
+void Graphics::draw_point(RenderWindow &w, Vector2f pos, Color color, Vector2f offset, float cellSize) {
+    RectangleShape cell(Vector2f(cellSize, cellSize));
     cell.setPosition(pos + offset);
     cell.setFillColor(color);
     w.draw(cell);
@@ -17,15 +17,68 @@ void Graphics::draw(Population p, RenderWindow &w, Vector2f offset, float cellSi
         float py = y * cellSize;
 
         if (entity->getType() == Type::rabbit) {
-            draw_point(w, {px, py}, Color::Blue, offset);
+            draw_point(w, {px, py}, Color::Blue, offset, cellSize);
         } else {
-            draw_point(w, {px, py}, Color::Red, offset);
+            draw_point(w, {px, py}, Color::Red, offset, cellSize);
         }
     }
     sleep(seconds(0.5));
 }
 
+
+void Graphics::graphEvolution(RenderWindow &w, Population p, float turn, Vector2f offset) {
+    const vector<Entity*> entities = p.getEntities();
+    float card_rab = 0;
+    float card_fox = 0;
+    float graphWidth = 250.f;
+    float graphHeight = 200.f;
+    float xStep = 5.f;
+    float pointSize = 3.f;
+
+
+    for (auto entity : entities) {
+        if (entity->getType() == Type::rabbit) {
+            card_rab++;
+        } else {
+            card_fox++;
+        }
+    }
+    rabbitsHistory.push_back(card_rab);
+    foxesHistory.push_back(card_fox);
+
+    float max_y = 1.f;
+    for (size_t i = 0; i < rabbitsHistory.size(); ++i) {
+        max_y = std::max({max_y, rabbitsHistory[i], foxesHistory[i]});
+    }
+
+    VertexArray axes(PrimitiveType::Lines, 4);
+    axes[0].position = offset;
+    axes[0].color = Color::Black;
+    axes[1].position = offset + Vector2f(0.f, graphHeight);
+    axes[1].color = Color::Black;
+    axes[2].position = offset + Vector2f(0.f, graphHeight);
+    axes[2].color = Color::Black;
+    axes[3].position = offset + Vector2f(graphWidth, graphHeight);
+    axes[3].color = Color::Black;
+    w.draw(axes);
+
+    for (size_t i = 0; i < rabbitsHistory.size(); ++i) {
+        float x = i * xStep;
+        if (x > graphWidth - pointSize) break;
+
+        float y_rabbit = graphHeight * (1 - rabbitsHistory[i] / max_y);
+        float y_fox = graphHeight * (1 - foxesHistory[i] / max_y);
+
+        draw_point(w, {x, y_rabbit - pointSize / 2.f}, Color::Blue, offset, pointSize);
+        draw_point(w, {x, y_fox - pointSize / 2.f}, Color::Red, offset, pointSize);
+    }
+}
+
+
+
 void Graphics::start(RenderWindow &window) {
+    float turn = 0;
+
     EntityParams params;
     TypeParams rabbitParams(20, 5, 15, 1, 2, 65, 3, {});
     TypeParams foxParams(15, 5, 15, -1, 2, 65, 3, {Type::rabbit});
@@ -39,14 +92,17 @@ void Graphics::start(RenderWindow &window) {
     }
     Sprite sprite(texture);
 
+    RectangleShape graphEvo({250,200});
+    graphEvo.setPosition(Vector2f(10.f, 450.f));
+    graphEvo.setFillColor(Color::White);
+
+
     FloatRect menuButton({950.f, 420.f}, {120.f, 280.f});
     RectangleShape Simulator(Vector2f(600.f, 600.f));
     Simulator.setPosition(Vector2f(270.f, 270.f));
     Simulator.setFillColor(Color::White);
 
-    const float simulatorSize = 600.f;
     const int gridSize = TAILLE_GRID;
-    const float cellSize = simulatorSize / gridSize;
 
     Game game(params, gridSize);
     game.start();
@@ -61,14 +117,19 @@ void Graphics::start(RenderWindow &window) {
             if (menuButton.contains(mousePos)) {
                 std::cout << "Menu presionado 🦊🚀" << std::endl;
                 game.stop();
+                rabbitsHistory.clear();
+                foxesHistory.clear();
                 return;
             }
         }
         window.clear(Color::White);
         window.draw(sprite);
         window.draw(Simulator);
-        draw(game.getPopulation(), window, Simulator.getPosition(), cellSize);
+        draw(game.getPopulation(), window, Simulator.getPosition(), 60);
+        window.draw(graphEvo);
+        graphEvolution(window, game.getPopulation(), turn, graphEvo.getPosition());
         game.next();
+        turn++;
         window.display();
     }
 }
@@ -104,7 +165,7 @@ void Graphics::menu() {
             if (paramsButton.contains(mousePos)) {
                 std::cout << "Params presionado 🐰🛠️" << std::endl;
             }
-            sleep(sf::milliseconds(200));
+            sleep(sf::milliseconds(100));
         }
 
         window.clear();
