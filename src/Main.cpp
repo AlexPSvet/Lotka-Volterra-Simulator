@@ -13,7 +13,7 @@ int main() {
     cin >> answer;
 
     if (answer == "s") {
-        auto graphics = std::make_unique<Graphics>();
+        Graphics* graphics = new Graphics();
         graphics->menu();
     } else if (answer == "c") {
         Console console;

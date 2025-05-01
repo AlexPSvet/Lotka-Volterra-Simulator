@@ -4,6 +4,17 @@ Graphics::Graphics() {
     if (!rabbitTexture.loadFromFile("../Assets/bugs.png")) {
         std::cerr << "Error: no se pudo cargar la imagen del conejo." << std::endl;
     }
+    if (!foxTexture.loadFromFile("../Assets/Zorro.png")) {
+        std::cerr << "Error: no se pudo cargar la imagen del Zorro." << std::endl;
+    }
+    if (!GameTexture.loadFromFile("../Assets/Start.png")) {
+        cerr << "Error: no se pudo cargar la imagen." << endl;
+        return;
+    }
+    if (!MenuTexture.loadFromFile("../Assets/Life.png")) {
+        cerr << "Error: no se pudo cargar la imagen." << endl;
+        return;
+    }
 }
 
 void Graphics::draw_point(RenderWindow &w, Vector2f pos, Color color, Vector2f offset, float cellSize) {
@@ -30,7 +41,12 @@ void Graphics::draw(Population p, RenderWindow &w, Vector2f offset, float cellSi
             bugs.setPosition({px + offset.x, py + offset.y});
             w.draw(bugs);
         } else {
-            draw_point(w, {px, py}, Color::Red, offset, cellSize);
+            Sprite zorro(foxTexture);
+            float scaleX = cellSize / foxTexture.getSize().x;
+            float scaleY = cellSize / foxTexture.getSize().y;
+            zorro.setScale({scaleX, scaleY});
+            zorro.setPosition({px + offset.x, py + offset.y});
+            w.draw(zorro);
         }
     }
     sleep(seconds(0.5));
@@ -119,12 +135,7 @@ void Graphics::start(RenderWindow &window) {
     params.addType(Type::rabbit, rabbitParams);
     params.addType(Type::fox, foxParams);
 
-    Texture texture;
-    if (!texture.loadFromFile("../Assets/Start.png")) {
-        cerr << "Error: no se pudo cargar la imagen." << endl;
-        return;
-    }
-    Sprite sprite(texture);
+    Sprite sprite(GameTexture);
 
     RectangleShape graphEvo({250,200});
     graphEvo.setPosition(Vector2f(10.f, 450.f));
@@ -172,13 +183,7 @@ void Graphics::menu() {
     RenderWindow window(VideoMode({WINDOW_SIZE,WINDOW_SIZE}), "Simulation");
     window.setFramerateLimit(5);
 
-    Texture texture;
-    if (!texture.loadFromFile("../Assets/Life.png")) {
-        cerr << "Error: no se pudo cargar la imagen." << endl;
-        return;
-    }
-
-    Sprite sprite(texture);
+    Sprite sprite(MenuTexture);
     FloatRect startButton({280.f, 890.f}, {240.f, 80.f});
     FloatRect paramsButton({620.f, 890.f}, {220.f, 80.f});
 

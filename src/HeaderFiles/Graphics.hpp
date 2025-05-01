@@ -19,7 +19,11 @@ struct  Graphics {
 
     vector<float> rabbitsHistory = {};
     vector<float> foxesHistory = {};
-    sf::Texture rabbitTexture;
+
+    Texture rabbitTexture;
+    Texture foxTexture;
+    Texture MenuTexture;
+    Texture GameTexture;
 };
 
 #endif
