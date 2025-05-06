@@ -4,7 +4,7 @@
 #include "Ensemble.hpp"
 using namespace std;
 
-const int TAILLE_GRID = 100;
+const int TAILLE_GRID = 20;
 
 /**
  * @brief Represents a 2D coordinate on the grid.
