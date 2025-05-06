@@ -41,7 +41,7 @@ class Graphics {
         void drawMenu(RenderWindow& window);
 
         Menu* menu;
-        Simulator* simulator;
+        SimulatorMenu* simulator;
 
         Texture rabbitTexture;
         Texture foxTexture;
