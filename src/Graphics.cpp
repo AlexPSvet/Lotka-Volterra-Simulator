@@ -55,7 +55,7 @@ ParamsMenu::ParamsMenu(Game*& game) : game(game) {
             "Min free cases"
         };
     for (int i = 0; i < strings.size(); i++) {
-        TextBox text(strings[i], midScreen - 250, 200 + 50 * i, 400, 40, font);
+        TextBox text(strings[i], 200, 200 + 50 * i, 400, 40, font);
         textBoxs.push_back(text);
     }
 
@@ -73,25 +73,26 @@ bool ParamsMenu::draw(RenderWindow& window) {
         button.draw(window);
     }
 
+    for (int i = 0; i < textBoxs.size(); i++) {
+        textBoxs[i].draw(window);
+    }
+
     if (Mouse::isButtonPressed(Mouse::Button::Left)) {
         Vector2f mousePos = window.mapPixelToCoords(Mouse::getPosition(window));
         if (buttons[0].box.getGlobalBounds().contains(mousePos)) {
             saveParams();
             return true;
         } else if (buttons[1].box.getGlobalBounds().contains(mousePos)) {
-            typeParamsId = 0;
             saveParams();
+            typeParamsId = 0;
             setParamsText();
         } else if (buttons[2].box.getGlobalBounds().contains(mousePos)) {
-            typeParamsId = 1;
             saveParams();
+            typeParamsId = 1;
             setParamsText();
         }
     }
 
-    for (int i = 0; i < textBoxs.size(); i++) {
-        textBoxs[i].draw(window);
-    }
     return false;
 }
 

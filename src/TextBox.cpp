@@ -10,7 +10,7 @@ TextBox::TextBox(std::string textLabel, float x, float y, float width, float hei
     label.setString(textLabel);
 
     box.setSize({width, height});
-    box.setPosition({x, y});
+    box.setPosition({x + 410, y});
     box.setFillColor(sf::Color::White);
     box.setOutlineColor(sf::Color::Black);
     box.setOutlineThickness(2);
@@ -30,7 +30,6 @@ void TextBox::handle_event(const std::optional<Event>& event, const sf::RenderWi
         } else {
             set_focus(false);
         }
-        std::cout << "MOUSE PRESSED" << std::endl;
     }
 
     if (is_focused) {
@@ -57,6 +56,7 @@ void TextBox::set_label(const std::string& labelText) {
 
 void TextBox::setText(const std::string& textStr) {
     text.setString(textStr);
+    input = textStr;
 }
 
 std::string TextBox::getText() {
