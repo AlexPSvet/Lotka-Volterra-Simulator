@@ -9,38 +9,46 @@ using namespace std;
 enum class Type { rabbit, fox };
 extern const vector<Type> ALL_TYPES;
 
+/**
+ * @brief Represents a living entity in the simulation.
+ */
 class Entity {
-    public:
-        Entity(int id, Type type, int age);
-        Entity(int id, Type type, int age, int foodLevel);
+public:
+    /// Constructs an entity with default food level.
+    Entity(int id, Type type, int age);
 
-        void eat(int amount);
+    /// Constructs an entity with specified food level.
+    Entity(int id, Type type, int age, int foodLevel);
 
-        bool canReproduce(Type type) const;
+    /// Increases food level by the specified amount.
+    void eat(int amount);
 
-        int getId() const;
-        Type getType() const;
-        int getAge() const;
-        int getFoodLevel() const;
-        Coord getCoord() const;
-        bool isActive() const;
+    /// Returns true if the entity can reproduce with another of the given type.
+    bool canReproduce(Type type) const;
 
-        void setType(Type type);
-        void setAge(int age);
-        void setFoodLevel(int foodLevel);
-        void addFood(int food);
-        void setCoord(Coord coord);
-        void setActive(bool value);
+    int getId() const;
+    Type getType() const;
+    int getAge() const;
+    int getFoodLevel() const;
+    Coord getCoord() const;
+    bool isActive() const;
 
-        ostream& operator<<(ostream& o) const;
-    private:
-        Type type;
+    void setType(Type type);
+    void setAge(int age);
+    void setFoodLevel(int foodLevel);
+    void addFood(int food);
+    void setCoord(Coord coord);
+    void setActive(bool value);
 
-        const int id;
-        int age;
-        int foodLevel;
-        bool active;
-        Coord coord;
+    ostream& operator<<(ostream& o) const;
+
+private:
+    Type type;
+    const int id;
+    int age;
+    int foodLevel;
+    bool active;
+    Coord coord;
 };
 
 #endif

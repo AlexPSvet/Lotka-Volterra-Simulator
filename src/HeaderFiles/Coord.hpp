@@ -4,39 +4,56 @@
 #include "Ensemble.hpp"
 using namespace std;
 
-const int TAILLE_GRID = 20;
+const int TAILLE_GRID = 100;
 
+/**
+ * @brief Represents a 2D coordinate on the grid.
+ */
 struct Coord {
-    public:
-        Coord();
-        Coord(int n);
-        Coord(int x, int y);
+public:
+    Coord();
+    Coord(int n);            ///< Initializes from a single index.
+    Coord(int x, int y);     ///< Initializes from x and y values.
 
-        float getX() const;
-        float getY() const;
+    float getX() const;
+    float getY() const;
 
-        int toInt() const;
+    /// Converts the coordinate to a single integer (flattened index).
+    int toInt() const;
 
-        Ensemble neighbours();
+    /// Returns neighboring coordinates (Moore or Von Neumann depending on implementation).
+    Ensemble neighbours();
 
-        ostream& operator<<(ostream& out);
-        bool operator==(const Coord& c);
-        bool operator!=(const Coord& c);
-    private:
-        int x, y;
+    ostream& operator<<(ostream& out);
+    bool operator==(const Coord& c);
+    bool operator!=(const Coord& c);
+
+private:
+    int x, y;
 };
 
+/**
+ * @brief Represents the simulation grid and manages cell values.
+ */
 class Grid : public Ensemble {
-    public:
-        Grid(int taille);
+public:
+    /// Constructs a grid with the given side length.
+    Grid(int taille);
 
-        void voidCase(int i);
-        void restartGrid();
+    /// Empties the cell at the given index.
+    void voidCase(int i);
 
-        Ensemble getEmptyCases();
-        int getGridLenght();
-    private:
-        int gridLenght;
+    /// Resets the grid to initial empty state.
+    void restartGrid();
+
+    /// Returns a set of currently empty cells.
+    Ensemble getEmptyCases();
+
+    /// Returns the side length of the grid.
+    int getGridLenght();
+
+private:
+    int gridLenght;
 };
 
 #endif
