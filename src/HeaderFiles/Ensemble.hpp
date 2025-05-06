@@ -4,6 +4,8 @@
 #include <iostream>
 #include <cstdlib>
 
+using namespace std;
+
 const int MAXCARD = 10e3;
 
 /**
