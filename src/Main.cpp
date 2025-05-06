@@ -14,7 +14,7 @@ int main() {
 
     if (answer == "s") {
         Graphics graphics;
-        graphics.menu();
+        graphics.start();
     } else if (answer == "c") {
         Console console;
         console.start();
