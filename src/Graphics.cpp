@@ -1,17 +1,17 @@
 #include "HeaderFiles/Graphics.hpp"
 
 Graphics::Graphics() {
-    if (!rabbitTexture.loadFromFile("../Assets/bugs.png")) {
+    if (!rabbitTexture.loadFromFile("../assets/bugs.png")) {
         std::cerr << "Error: no se pudo cargar la imagen del conejo." << std::endl;
     }
-    if (!foxTexture.loadFromFile("../Assets/Zorro.png")) {
+    if (!foxTexture.loadFromFile("../assets/Zorro.png")) {
         std::cerr << "Error: no se pudo cargar la imagen del Zorro." << std::endl;
     }
-    if (!GameTexture.loadFromFile("../Assets/Start.png")) {
+    if (!gameTexture.loadFromFile("../assets/Start.png")) {
         cerr << "Error: no se pudo cargar la imagen." << endl;
         return;
     }
-    if (!MenuTexture.loadFromFile("../Assets/Life.png")) {
+    if (!menuTexture.loadFromFile("../assets/Life.png")) {
         cerr << "Error: no se pudo cargar la imagen." << endl;
         return;
     }
@@ -49,11 +49,10 @@ void Graphics::draw(Population p, RenderWindow &w, Vector2f offset, float cellSi
             w.draw(zorro);
         }
     }
-    sleep(seconds(0.5));
 }
 
 
-void Graphics::graphEvolution(RenderWindow &w, Population p, float turn, Vector2f offset) {
+void Graphics::graphEvolution(RenderWindow &w, Population p, Vector2f offset) {
     const vector<Entity*> entities = p.getEntities();
     float card_rab = 0;
     float card_fox = 0;
@@ -62,7 +61,7 @@ void Graphics::graphEvolution(RenderWindow &w, Population p, float turn, Vector2
     float xStep = 5.f;
     float pointSize = 3.f;
 
-
+    SimulatorMenu& simGame = *simulator;
     for (auto entity : entities) {
         if (entity->getType() == Type::rabbit) {
             card_rab++;
@@ -70,12 +69,12 @@ void Graphics::graphEvolution(RenderWindow &w, Population p, float turn, Vector2
             card_fox++;
         }
     }
-    rabbitsHistory.push_back(card_rab);
-    foxesHistory.push_back(card_fox);
+    simGame.rabbitsHistory.push_back(card_rab);
+    simGame.foxesHistory.push_back(card_fox);
 
     float max_y = 1.f;
-    for (size_t i = 0; i < rabbitsHistory.size(); ++i) {
-        max_y = std::max(max_y, std::max(rabbitsHistory[i], foxesHistory[i]));
+    for (size_t i = 0; i < simGame.rabbitsHistory.size(); ++i) {
+        max_y = std::max(max_y, std::max(simGame.rabbitsHistory[i], simGame.foxesHistory[i]));
     }
 
     VertexArray axes(PrimitiveType::Lines, 4);
@@ -89,126 +88,146 @@ void Graphics::graphEvolution(RenderWindow &w, Population p, float turn, Vector2
     axes[3].color = Color::Black;
     w.draw(axes);
 
-    for (size_t i = 0; i < rabbitsHistory.size(); ++i) {
-        float x = i * xStep;
-        if (x > graphWidth - pointSize) break;
+    for (size_t i = simGame.startIndex; i < simGame.rabbitsHistory.size(); ++i) {
+        float x = (i - simGame.startIndex) * xStep;
+        if (x > graphWidth - pointSize) {
+            simGame.startIndex++;
+            break;
+        }
 
-        float y_rabbit = graphHeight * (1 - rabbitsHistory[i] / max_y);
-        float y_fox = graphHeight * (1 - foxesHistory[i] / max_y);
+        float y_rabbit = graphHeight * (1 - simGame.rabbitsHistory[i] / max_y);
+        float y_fox = graphHeight * (1 - simGame.foxesHistory[i] / max_y);
 
         draw_point(w, {x, y_rabbit - pointSize / 2.f}, Color::Blue, offset, pointSize);
         draw_point(w, {x, y_fox - pointSize / 2.f}, Color::Red, offset, pointSize);
     }
 }
 
+void Graphics::drawSimulator(RenderWindow &window) {
+    const int gridSize = TAILLE_GRID;
 
+    SimulatorMenu& simGame = *simulator;
+    if (Mouse::isButtonPressed(Mouse::Button::Left)) {
+        Vector2f mousePos = window.mapPixelToCoords(Mouse::getPosition(window));
+        if (simGame.menuButton.contains(mousePos)) {
+            std::cout << "Menu presionado 🦊🚀" << std::endl;
+            game->stop();
+            simGame.rabbitsHistory.clear();
+            simGame.foxesHistory.clear();
+            state = ScreenState::menu;
+            return;
+        }
+    }
 
-void Graphics::start(RenderWindow &window) {
-    float turn = 0;
+    window.draw(Sprite(gameTexture));
+    window.draw(simGame.background);
+    draw(game->getPopulation(), window, simGame.background.getPosition(), 600 / gridSize);
+    window.draw(simGame.graphEvo);
+    graphEvolution(window, game->getPopulation(), simGame.graphEvo.getPosition());
+    game->next();
+}
 
+void Graphics::drawMenu(RenderWindow& window) {
+    Menu& menuSimulator = *menu;
+    if (Mouse::isButtonPressed(Mouse::Button::Left)) {
+        Vector2f mousePos = window.mapPixelToCoords(Mouse::getPosition(window));
+        if (menuSimulator.startButton.contains(mousePos)) {
+            std::cout << "Start presionado 🦊🚀" << std::endl;
+            game->start();
+            state = ScreenState::simulation;
+        }
+        if (menuSimulator.paramsButton.contains(mousePos)) {
+            std::cout << "Params presionado 🐰🛠️" << std::endl;
+            state = ScreenState::params;
+        }
+        // sleep(sf::milliseconds(100));
+    }
+    window.draw(Sprite(menuTexture));
+}
+
+void Graphics::start() {
+    RenderWindow window(VideoMode({WINDOW_SIZE,WINDOW_SIZE}), "Simulation");
+    window.setFramerateLimit(5);
+
+    // -- Set local graphics variables.
+
+    // MENU
+    menu = new Menu();
+    menu->startButton = FloatRect({280.f, 890.f}, {240.f, 80.f});
+    menu->paramsButton = FloatRect({620.f, 890.f}, {220.f, 80.f});
+
+    // SIMULATOR
+    simulator = new SimulatorMenu();
+    simulator->graphEvo = RectangleShape({250,200});
+    simulator->graphEvo.setPosition(Vector2f(10.f, 450.f));
+    simulator->graphEvo.setFillColor(Color::White);
+    simulator->menuButton = FloatRect({950.f, 420.f}, {120.f, 280.f});
+    simulator->background = RectangleShape(Vector2f(600.f, 600.f));
+    simulator->background.setPosition(Vector2f(270.f, 270.f));
+    simulator->background.setFillColor(Color::White);
+
+    // -- Set local game simulation.
     EntityParams params;
 
     TypeParams rabbitParams(
-        100,   // entityInit
-        10,   // foodMin
+        20,   // entityInit
+        5,   // foodMin
         20,   // foodMax
-        10,   // foodToReproduceLevel
-        0,    // foodPerMove
-        7,    // foodValue
-        25,   // probReproduce
+        15,   // foodToReproduceLevel
+        1,    // foodPerMove
+        6,    // foodValue
+        45,   // probReproduce
         3,    // minFreeBirth
         {}    // preys
     );
 
     TypeParams foxParams(
-        100,               // entityInit
-        20,               // foodMin
-        30,               // foodMax
-        15,               // foodToReproduceLevel
+        20,               // entityInit
+        5,                // foodMin
+        20,               // foodMax
+        10,               // foodToReproduceLevel
         -1,               // foodPerMove
         15,               // foodValue
-        40,               // probReproduce
-        5,                // minFreeBirth
+        80,               // probReproduce
+        4,                // minFreeBirth
         {Type::rabbit}    // preys
     );
 
     params.addType(Type::rabbit, rabbitParams);
     params.addType(Type::fox, foxParams);
 
-    Sprite sprite(GameTexture);
+    game = new Game(params, TAILLE_GRID);
 
-    RectangleShape graphEvo({250,200});
-    graphEvo.setPosition(Vector2f(10.f, 450.f));
-    graphEvo.setFillColor(Color::White);
-
-
-    FloatRect menuButton({950.f, 420.f}, {120.f, 280.f});
-    RectangleShape Simulator(Vector2f(600.f, 600.f));
-    Simulator.setPosition(Vector2f(270.f, 270.f));
-    Simulator.setFillColor(Color::White);
-
-    const int gridSize = TAILLE_GRID;
-
-    Game game(params, gridSize);
-    game.start();
-
+    // -- Window logic.
     while (window.isOpen()) {
         while (const std::optional event = window.pollEvent()) {
-            if (event->is<sf::Event::Closed>())
+            if (event->is<sf::Event::Closed>()) {
+                stop();
                 window.close();
-        }
-        if (Mouse::isButtonPressed(Mouse::Button::Left)) {
-            Vector2f mousePos = window.mapPixelToCoords(Mouse::getPosition(window));
-            if (menuButton.contains(mousePos)) {
-                std::cout << "Menu presionado 🦊🚀" << std::endl;
-                game.stop();
-                rabbitsHistory.clear();
-                foxesHistory.clear();
                 return;
             }
         }
+
         window.clear(Color::White);
-        window.draw(sprite);
-        window.draw(Simulator);
-        draw(game.getPopulation(), window, Simulator.getPosition(), 600 / gridSize);
-        window.draw(graphEvo);
-        graphEvolution(window, game.getPopulation(), turn, graphEvo.getPosition());
-        game.next();
-        turn++;
+        switch (state) {
+            case ScreenState::menu:
+                drawMenu(window);
+                break;
+            case ScreenState::params:
+                
+                break;
+            case ScreenState::simulation:
+                drawSimulator(window);
+        }
         window.display();
     }
+
+    stop();
 }
 
-void Graphics::menu() {
-    RenderWindow window(VideoMode({WINDOW_SIZE,WINDOW_SIZE}), "Simulation");
-    window.setFramerateLimit(5);
-
-    Sprite sprite(MenuTexture);
-    FloatRect startButton({280.f, 890.f}, {240.f, 80.f});
-    FloatRect paramsButton({620.f, 890.f}, {220.f, 80.f});
-
-    while (window.isOpen()) {
-        while (const std::optional event = window.pollEvent()) {
-            if (event->is<sf::Event::Closed>())
-                window.close();
-        }
-
-        //Botones
-        if (Mouse::isButtonPressed(Mouse::Button::Left)) {
-            Vector2f mousePos = window.mapPixelToCoords(Mouse::getPosition(window));
-            if (startButton.contains(mousePos)) {
-                std::cout << "Start presionado 🦊🚀" << std::endl;
-                start(window);
-
-            }
-            if (paramsButton.contains(mousePos)) {
-                std::cout << "Params presionado 🐰🛠️" << std::endl;
-            }
-            sleep(sf::milliseconds(100));
-        }
-
-        window.clear();
-        window.draw(sprite);
-        window.display();
-    }
+void Graphics::stop() {
+    game->stop();
+    delete menu;
+    delete simulator;
+    delete game;
 }
