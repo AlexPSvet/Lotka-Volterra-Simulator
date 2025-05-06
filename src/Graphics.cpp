@@ -1,5 +1,83 @@
 #include "HeaderFiles/Graphics.hpp"
 
+// BUTTON
+
+Button::Button(
+    std::string textStr, 
+    Color textColor, 
+    Color fillColor, 
+    int x, int y, 
+    float width, float height, 
+    const sf::Font& font) : text(font)
+{
+    text.setFont(font);
+    text.setFillColor(sf::Color::Black);
+
+    box.setFillColor(sf::Color::White);
+    box.setOutlineColor(sf::Color::Black);
+    box.setOutlineThickness(2.f);
+
+    box = RectangleShape({width, height});
+    box.setPosition({x, y});
+    box.setFillColor(fillColor);
+
+    text.setFont(font);
+    text.setString(textStr);
+    int amountChar = textStr.size();
+    float charSizeWidth = width / amountChar;
+    text.setCharacterSize(charSizeWidth > height ? height : charSizeWidth);
+    float positionX = x + ( width - text.getCharacterSize() * amountChar ) / 2;
+    float positionY = y + ( height - text.getCharacterSize() ) / 2;
+    text.setPosition({positionX, positionY});
+}
+
+void Button::draw(sf::RenderWindow& window) const {
+    window.draw(box);
+    window.draw(text);
+}
+
+// PARAMS MENU
+
+ParamsMenu::ParamsMenu() {
+    if (!font.openFromFile("../fonts/tannimbus.otf")) {
+        std::cerr << "Error while loading text font.";
+    }
+
+    std::vector<std::string> strings = {
+            "Entity init              : ",
+            "Food min                 : ",
+            "Food max                 : ",
+            "Food to reproduce        : ",
+            "Food per move            : ",
+            "Food value               : ",
+            "Probability to reproduce : ",
+            "Min free cases           : "
+        };
+    for (int i = 0; i < strings.size(); i++) {
+        TextBox text(strings[i], 100, 100 + 50 * i, 400, 40, font);
+        textBoxs.push_back(text);
+    }
+
+    Button rabbitButton("RABBIT", Color::White, Color::Green, 50, 50, 100, 50, font);
+    Button foxButton("FOX", Color::White, Color::Red,  200, 50, 100, 50, font);
+    buttons.push_back(rabbitButton);
+    buttons.push_back(foxButton);
+}
+
+void ParamsMenu::draw(RenderWindow& window) {
+    for (Button& button : buttons) {
+        button.draw(window);
+    }
+
+    if (state == ParamsState::selectType) {
+        for (int i = 0; i < textBoxs.size(); i++) {
+            textBoxs[i].draw(window);
+        }
+    }
+}
+
+// GRAPHICS
+
 Graphics::Graphics() {
     if (!rabbitTexture.loadFromFile("../assets/bugs.png")) {
         std::cerr << "Error: no se pudo cargar la imagen del conejo." << std::endl;
@@ -51,7 +129,6 @@ void Graphics::draw(Population p, RenderWindow &w, Vector2f offset, float cellSi
     }
 }
 
-
 void Graphics::graphEvolution(RenderWindow &w, Population p, Vector2f offset) {
     const vector<Entity*> entities = p.getEntities();
     float card_rab = 0;
@@ -61,7 +138,6 @@ void Graphics::graphEvolution(RenderWindow &w, Population p, Vector2f offset) {
     float xStep = 5.f;
     float pointSize = 3.f;
 
-    SimulatorMenu& simGame = *simulator;
     for (auto entity : entities) {
         if (entity->getType() == Type::rabbit) {
             card_rab++;
@@ -69,12 +145,12 @@ void Graphics::graphEvolution(RenderWindow &w, Population p, Vector2f offset) {
             card_fox++;
         }
     }
-    simGame.rabbitsHistory.push_back(card_rab);
-    simGame.foxesHistory.push_back(card_fox);
+    simulator.rabbitsHistory.push_back(card_rab);
+    simulator.foxesHistory.push_back(card_fox);
 
     float max_y = 1.f;
-    for (size_t i = 0; i < simGame.rabbitsHistory.size(); ++i) {
-        max_y = std::max(max_y, std::max(simGame.rabbitsHistory[i], simGame.foxesHistory[i]));
+    for (size_t i = 0; i < simulator.rabbitsHistory.size(); ++i) {
+        max_y = std::max(max_y, std::max(simulator.rabbitsHistory[i], simulator.foxesHistory[i]));
     }
 
     VertexArray axes(PrimitiveType::Lines, 4);
@@ -88,15 +164,15 @@ void Graphics::graphEvolution(RenderWindow &w, Population p, Vector2f offset) {
     axes[3].color = Color::Black;
     w.draw(axes);
 
-    for (size_t i = simGame.startIndex; i < simGame.rabbitsHistory.size(); ++i) {
-        float x = (i - simGame.startIndex) * xStep;
+    for (size_t i = simulator.startIndex; i < simulator.rabbitsHistory.size(); ++i) {
+        float x = (i - simulator.startIndex) * xStep;
         if (x > graphWidth - pointSize) {
-            simGame.startIndex++;
+            simulator.startIndex++;
             break;
         }
 
-        float y_rabbit = graphHeight * (1 - simGame.rabbitsHistory[i] / max_y);
-        float y_fox = graphHeight * (1 - simGame.foxesHistory[i] / max_y);
+        float y_rabbit = graphHeight * (1 - simulator.rabbitsHistory[i] / max_y);
+        float y_fox = graphHeight * (1 - simulator.foxesHistory[i] / max_y);
 
         draw_point(w, {x, y_rabbit - pointSize / 2.f}, Color::Blue, offset, pointSize);
         draw_point(w, {x, y_fox - pointSize / 2.f}, Color::Red, offset, pointSize);
@@ -106,43 +182,52 @@ void Graphics::graphEvolution(RenderWindow &w, Population p, Vector2f offset) {
 void Graphics::drawSimulator(RenderWindow &window) {
     const int gridSize = TAILLE_GRID;
 
-    SimulatorMenu& simGame = *simulator;
     if (Mouse::isButtonPressed(Mouse::Button::Left)) {
         Vector2f mousePos = window.mapPixelToCoords(Mouse::getPosition(window));
-        if (simGame.menuButton.contains(mousePos)) {
+        if (simulator.menuButton.contains(mousePos)) {
             std::cout << "Menu presionado 🦊🚀" << std::endl;
             game->stop();
-            simGame.rabbitsHistory.clear();
-            simGame.foxesHistory.clear();
+            simulator.startIndex = 0;
+            simulator.rabbitsHistory.clear();
+            simulator.foxesHistory.clear();
             state = ScreenState::menu;
             return;
         }
     }
 
     window.draw(Sprite(gameTexture));
-    window.draw(simGame.background);
-    draw(game->getPopulation(), window, simGame.background.getPosition(), 600 / gridSize);
-    window.draw(simGame.graphEvo);
-    graphEvolution(window, game->getPopulation(), simGame.graphEvo.getPosition());
+    window.draw(simulator.background);
+    draw(game->getPopulation(), window, simulator.background.getPosition(), 600 / gridSize);
+    window.draw(simulator.graphEvo);
+    graphEvolution(window, game->getPopulation(), simulator.graphEvo.getPosition());
     game->next();
 }
 
 void Graphics::drawMenu(RenderWindow& window) {
-    Menu& menuSimulator = *menu;
     if (Mouse::isButtonPressed(Mouse::Button::Left)) {
         Vector2f mousePos = window.mapPixelToCoords(Mouse::getPosition(window));
-        if (menuSimulator.startButton.contains(mousePos)) {
+        if (menu.startButton.contains(mousePos)) {
             std::cout << "Start presionado 🦊🚀" << std::endl;
             game->start();
             state = ScreenState::simulation;
         }
-        if (menuSimulator.paramsButton.contains(mousePos)) {
+        if (menu.paramsButton.contains(mousePos)) {
             std::cout << "Params presionado 🐰🛠️" << std::endl;
             state = ScreenState::params;
         }
         // sleep(sf::milliseconds(100));
     }
     window.draw(Sprite(menuTexture));
+}
+
+void Graphics::handleEvents(RenderWindow& window) {
+    while (const std::optional event = window.pollEvent()) {
+        if (event->is<sf::Event::Closed>()) {
+            stop();
+            window.close();
+            return;
+        }
+    }
 }
 
 void Graphics::start() {
@@ -152,19 +237,17 @@ void Graphics::start() {
     // -- Set local graphics variables.
 
     // MENU
-    menu = new Menu();
-    menu->startButton = FloatRect({280.f, 890.f}, {240.f, 80.f});
-    menu->paramsButton = FloatRect({620.f, 890.f}, {220.f, 80.f});
+    menu.startButton = FloatRect({280.f, 890.f}, {240.f, 80.f});
+    menu.paramsButton = FloatRect({620.f, 890.f}, {220.f, 80.f});
 
     // SIMULATOR
-    simulator = new SimulatorMenu();
-    simulator->graphEvo = RectangleShape({250,200});
-    simulator->graphEvo.setPosition(Vector2f(10.f, 450.f));
-    simulator->graphEvo.setFillColor(Color::White);
-    simulator->menuButton = FloatRect({950.f, 420.f}, {120.f, 280.f});
-    simulator->background = RectangleShape(Vector2f(600.f, 600.f));
-    simulator->background.setPosition(Vector2f(270.f, 270.f));
-    simulator->background.setFillColor(Color::White);
+    simulator.graphEvo = RectangleShape({250,200});
+    simulator.graphEvo.setPosition(Vector2f(10.f, 450.f));
+    simulator.graphEvo.setFillColor(Color::White);
+    simulator.menuButton = FloatRect({950.f, 420.f}, {120.f, 280.f});
+    simulator.background = RectangleShape(Vector2f(600.f, 600.f));
+    simulator.background.setPosition(Vector2f(270.f, 270.f));
+    simulator.background.setFillColor(Color::White);
 
     // -- Set local game simulation.
     EntityParams params;
@@ -200,13 +283,7 @@ void Graphics::start() {
 
     // -- Window logic.
     while (window.isOpen()) {
-        while (const std::optional event = window.pollEvent()) {
-            if (event->is<sf::Event::Closed>()) {
-                stop();
-                window.close();
-                return;
-            }
-        }
+        handleEvents(window);
 
         window.clear(Color::White);
         switch (state) {
@@ -214,7 +291,7 @@ void Graphics::start() {
                 drawMenu(window);
                 break;
             case ScreenState::params:
-                
+                paramsMenu.draw(window);
                 break;
             case ScreenState::simulation:
                 drawSimulator(window);
@@ -227,7 +304,5 @@ void Graphics::start() {
 
 void Graphics::stop() {
     game->stop();
-    delete menu;
-    delete simulator;
     delete game;
 }

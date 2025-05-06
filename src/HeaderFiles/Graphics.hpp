@@ -10,10 +10,44 @@ using namespace sf;
 const int WINDOW_SIZE = 1120;
 
 enum class ScreenState {menu, params, simulation};
+enum class ParamsState {selectType, typeSettings};
+
+class Button {
+    public:
+        Button(
+            std::string textStr, 
+            Color textColor, 
+            Color fillColor, 
+            int x, int y, 
+            float width, float height, 
+            const sf::Font& font
+        );
+
+        void draw(sf::RenderWindow& window) const;
+    private:
+        sf::RectangleShape box;
+        sf::Text text;
+};
 
 struct Menu {
     FloatRect startButton;
     FloatRect paramsButton;
+};
+
+struct ParamsMenu {
+    public:
+        ParamsMenu();
+
+        void draw(RenderWindow& window);
+
+        ParamsState state = ParamsState::selectType;
+    private:
+        Font font;
+        
+        vector<Button> buttons;
+        std::vector<TextBox> textBoxs;
+
+        int typeParamsId = 0;
 };
 
 struct SimulatorMenu {
@@ -40,8 +74,11 @@ class Graphics {
         void drawSimulator(RenderWindow &window);
         void drawMenu(RenderWindow& window);
 
-        Menu* menu;
-        SimulatorMenu* simulator;
+        void handleEvents(RenderWindow& window);
+
+        Menu menu;
+        SimulatorMenu simulator;
+        ParamsMenu paramsMenu;
 
         Texture rabbitTexture;
         Texture foxTexture;

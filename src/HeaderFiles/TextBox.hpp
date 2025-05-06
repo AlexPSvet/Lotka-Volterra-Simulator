@@ -9,6 +9,7 @@ using namespace sf;
 class TextBox {
     public:
         TextBox(
+            std::string textLabel,
             float x, 
             float y, 
             float width, 
@@ -20,9 +21,11 @@ class TextBox {
         void handle_event(const Event& event, const RenderWindow& window);
         void draw(RenderWindow& window) const;
         const std::string& get_text() const;
+        void set_label(const std::string& labelText);
+        void setText(const std::string& textStr);
     private:
         RectangleShape box;
-        Text text;
+        Text text, label;
         std::string input;
         bool is_focused;
 

@@ -1,8 +1,14 @@
 #include "TextBox.hpp"
 
-TextBox::TextBox(float x, float y, float width, float height, sf::Font& font, unsigned int charSize)
-    : text(font), is_focused(false)
+TextBox::TextBox(std::string textLabel, float x, float y, float width, float height, sf::Font& font, unsigned int charSize)
+    : text(font), label(font), is_focused(false)
 {   
+    label.setFont(font);
+    label.setCharacterSize(charSize);
+    label.setFillColor(sf::Color::Black);
+    label.setPosition({x + 10.f, y + (height - charSize) / 2.f});
+    label.setString(textLabel);
+
     box.setSize({width, height});
     box.setPosition({x, y});
     box.setFillColor(sf::Color::White);
@@ -12,7 +18,8 @@ TextBox::TextBox(float x, float y, float width, float height, sf::Font& font, un
     text.setFont(font);
     text.setCharacterSize(charSize);
     text.setFillColor(sf::Color::Black);
-    text.setPosition({x + 10.f, y + (height - charSize) / 2.f});
+    text.setPosition({x + 450.f, y + (height - charSize) / 2.f});
+    text.setString("Test");
 }
 
 void TextBox::handle_event(const sf::Event& event, const sf::RenderWindow& window) {
@@ -28,7 +35,7 @@ void TextBox::handle_event(const sf::Event& event, const sf::RenderWindow& windo
     if (is_focused) {
         if (const auto* e = event.getIf<sf::Event::TextEntered>()) {
              if (e->unicode == 8 && !input.empty()) {
-                input.pop_back(); // Backspace
+                input.pop_back();
             } else if (e->unicode >= 32 && e->unicode < 128) {
                 input += static_cast<char>(e->unicode);
             }
@@ -39,7 +46,16 @@ void TextBox::handle_event(const sf::Event& event, const sf::RenderWindow& windo
 
 void TextBox::draw(sf::RenderWindow& window) const {
     window.draw(box);
+    window.draw(label);
     window.draw(text);
+}
+
+void TextBox::set_label(const std::string& labelText) {
+    label.setString(labelText);
+}
+
+void TextBox::setText(const std::string& textStr) {
+    text.setString(textStr);
 }
 
 const std::string& TextBox::get_text() const {
