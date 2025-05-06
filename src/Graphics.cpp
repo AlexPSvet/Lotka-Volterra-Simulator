@@ -62,7 +62,6 @@ void Graphics::graphEvolution(RenderWindow &w, Population p, float turn, Vector2
     float xStep = 5.f;
     float pointSize = 3.f;
 
-
     for (auto entity : entities) {
         if (entity->getType() == Type::rabbit) {
             card_rab++;
@@ -89,9 +88,12 @@ void Graphics::graphEvolution(RenderWindow &w, Population p, float turn, Vector2
     axes[3].color = Color::Black;
     w.draw(axes);
 
-    for (size_t i = 0; i < rabbitsHistory.size(); ++i) {
-        float x = i * xStep;
-        if (x > graphWidth - pointSize) break;
+    for (size_t i = startIndex; i < rabbitsHistory.size(); ++i) {
+        float x = (i - startIndex) * xStep;
+        if (x > graphWidth - pointSize) {
+            startIndex++;
+            break;
+        }
 
         float y_rabbit = graphHeight * (1 - rabbitsHistory[i] / max_y);
         float y_fox = graphHeight * (1 - foxesHistory[i] / max_y);
@@ -101,34 +103,32 @@ void Graphics::graphEvolution(RenderWindow &w, Population p, float turn, Vector2
     }
 }
 
-
-
 void Graphics::start(RenderWindow &window) {
     float turn = 0;
 
     EntityParams params;
 
     TypeParams rabbitParams(
-        100,   // entityInit
-        10,   // foodMin
+        20,   // entityInit
+        5,   // foodMin
         20,   // foodMax
-        10,   // foodToReproduceLevel
-        0,    // foodPerMove
-        7,    // foodValue
-        25,   // probReproduce
+        15,   // foodToReproduceLevel
+        1,    // foodPerMove
+        6,    // foodValue
+        45,   // probReproduce
         3,    // minFreeBirth
         {}    // preys
     );
 
     TypeParams foxParams(
-        100,               // entityInit
-        20,               // foodMin
-        30,               // foodMax
-        15,               // foodToReproduceLevel
+        20,               // entityInit
+        5,                // foodMin
+        20,               // foodMax
+        10,               // foodToReproduceLevel
         -1,               // foodPerMove
         15,               // foodValue
-        40,               // probReproduce
-        5,                // minFreeBirth
+        80,               // probReproduce
+        4,                // minFreeBirth
         {Type::rabbit}    // preys
     );
 
@@ -156,6 +156,7 @@ void Graphics::start(RenderWindow &window) {
         while (const std::optional event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>())
                 window.close();
+                game.stop();
         }
         if (Mouse::isButtonPressed(Mouse::Button::Left)) {
             Vector2f mousePos = window.mapPixelToCoords(Mouse::getPosition(window));

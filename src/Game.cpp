@@ -120,7 +120,7 @@ void Game::moveEntity(Entity* entity) {
     TypeParams typeParams = population.getParams().getTypeParams(type);
 
     // If he hasn't enough food to reproduce, and there are preys, then eat one of them.
-    if (entity->getFoodLevel() < typeParams.getFoodToReproduce()) {
+    if (entity->getFoodLevel() <= typeParams.getFoodMin()) {
         for (Type preyType : typeParams.getPreys()) {
             Ensemble preys = typeNeighbours(coord, preyType);
             if (preys.cardinal() != 0) {

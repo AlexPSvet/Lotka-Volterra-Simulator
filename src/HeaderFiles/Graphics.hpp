@@ -19,6 +19,7 @@ struct  Graphics {
 
     vector<float> rabbitsHistory = {};
     vector<float> foxesHistory = {};
+    int startIndex = 0;
 
     Texture rabbitTexture;
     Texture foxTexture;
