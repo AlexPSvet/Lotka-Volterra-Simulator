@@ -15,8 +15,8 @@ public:
     Coord(int n);            ///< Initializes from a single index.
     Coord(int x, int y);     ///< Initializes from x and y values.
 
-    float getX() const;
-    float getY() const;
+    int getX() const;
+    int getY() const;
 
     /// Converts the coordinate to a single integer (flattened index).
     int toInt() const;

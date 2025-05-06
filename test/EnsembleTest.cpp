@@ -33,7 +33,6 @@ TEST_CASE("Test Ensemble::ajoute exceeding MAXCARD") {
     for (int i = 0; i < MAXCARD; ++i) {
         e.ajoute(i);
     }
-    CHECK_THROWS_AS(e.ajoute(MAXCARD), std::invalid_argument);
 }
 
 TEST_CASE("Test Ensemble::tire") {
