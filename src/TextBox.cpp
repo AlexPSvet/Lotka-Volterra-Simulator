@@ -22,18 +22,19 @@ TextBox::TextBox(std::string textLabel, float x, float y, float width, float hei
     text.setString("Test");
 }
 
-void TextBox::handle_event(const sf::Event& event, const sf::RenderWindow& window) {
-    if (event.is<Event::MouseButtonPressed>()) {
+void TextBox::handle_event(const std::optional<Event>& event, const sf::RenderWindow& window) {
+    if (event->is<Event::MouseButtonPressed>()) {
         auto mouse_pos = sf::Mouse::getPosition(window);
         if (box.getGlobalBounds().contains({static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y)})) {
             set_focus(true);
         } else {
             set_focus(false);
         }
+        std::cout << "MOUSE PRESSED" << std::endl;
     }
 
     if (is_focused) {
-        if (const auto* e = event.getIf<sf::Event::TextEntered>()) {
+        if (const auto* e = event->getIf<sf::Event::TextEntered>()) {
              if (e->unicode == 8 && !input.empty()) {
                 input.pop_back();
             } else if (e->unicode >= 32 && e->unicode < 128) {

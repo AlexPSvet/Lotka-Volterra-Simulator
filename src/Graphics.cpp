@@ -6,20 +6,19 @@ Button::Button(
     std::string textStr, 
     Color textColor, 
     Color fillColor, 
+    Color outlineColor,
     int x, int y, 
     float width, float height, 
     const sf::Font& font) : text(font)
 {
     text.setFont(font);
-    text.setFillColor(sf::Color::Black);
-
-    box.setFillColor(sf::Color::White);
-    box.setOutlineColor(sf::Color::Black);
-    box.setOutlineThickness(2.f);
+    text.setFillColor(textColor);
 
     box = RectangleShape({width, height});
     box.setPosition({x, y});
     box.setFillColor(fillColor);
+    box.setOutlineColor(outlineColor);
+    box.setOutlineThickness(2.f);
 
     text.setFont(font);
     text.setString(textStr);
@@ -43,23 +42,28 @@ ParamsMenu::ParamsMenu() {
         std::cerr << "Error while loading text font.";
     }
 
+    float midScreen = WINDOW_SIZE / 2;
+
     std::vector<std::string> strings = {
-            "Entity init              : ",
-            "Food min                 : ",
-            "Food max                 : ",
-            "Food to reproduce        : ",
-            "Food per move            : ",
-            "Food value               : ",
-            "Probability to reproduce : ",
-            "Min free cases           : "
+            "Entity init",
+            "Food min",
+            "Food max",
+            "Food to reproduce",
+            "Food per move",
+            "Food value",
+            "Probability to reproduce",
+            "Min free cases"
         };
     for (int i = 0; i < strings.size(); i++) {
-        TextBox text(strings[i], 100, 100 + 50 * i, 400, 40, font);
+        TextBox text(strings[i], midScreen - 250, 200 + 50 * i, 400, 40, font);
         textBoxs.push_back(text);
     }
 
-    Button rabbitButton("RABBIT", Color::White, Color::Green, 50, 50, 100, 50, font);
-    Button foxButton("FOX", Color::White, Color::Red,  200, 50, 100, 50, font);
+    Color outline(80, 80, 80);
+    Button menuButton("MENU", Color::Green, Color::Black, outline, midScreen, WINDOW_SIZE - 400, 100, 100, font);
+    Button rabbitButton("RABBIT", Color::White, Color::Black, outline, midScreen - 100, 50, 150, 60, font);
+    Button foxButton("FOX", Color::White, Color::Black, outline,  midScreen + 100, 50, 150, 60, font);
+    buttons.push_back(menuButton);
     buttons.push_back(rabbitButton);
     buttons.push_back(foxButton);
 }
@@ -69,10 +73,14 @@ void ParamsMenu::draw(RenderWindow& window) {
         button.draw(window);
     }
 
-    if (state == ParamsState::selectType) {
-        for (int i = 0; i < textBoxs.size(); i++) {
-            textBoxs[i].draw(window);
-        }
+    for (int i = 0; i < textBoxs.size(); i++) {
+        textBoxs[i].draw(window);
+    }
+}
+
+void ParamsMenu::handleButtons(RenderWindow& window, const std::optional<Event>& event) {
+    for (TextBox& textBox : textBoxs) {
+        textBox.handle_event(event, window);
     }
 }
 
@@ -220,14 +228,22 @@ void Graphics::drawMenu(RenderWindow& window) {
     window.draw(Sprite(menuTexture));
 }
 
-void Graphics::handleEvents(RenderWindow& window) {
+bool Graphics::handleEvents(RenderWindow& window) {
     while (const std::optional event = window.pollEvent()) {
         if (event->is<sf::Event::Closed>()) {
-            stop();
             window.close();
-            return;
+            return true;
+        }
+
+        switch (state) {
+            case ScreenState::params:
+                paramsMenu.handleButtons(window, event);
+                break;
+            default:
+                break;
         }
     }
+    return false;
 }
 
 void Graphics::start() {
@@ -283,7 +299,9 @@ void Graphics::start() {
 
     // -- Window logic.
     while (window.isOpen()) {
-        handleEvents(window);
+        if (handleEvents(window)) {
+            break;
+        }
 
         window.clear(Color::White);
         switch (state) {

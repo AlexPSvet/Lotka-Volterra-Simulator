@@ -10,7 +10,6 @@ using namespace sf;
 const int WINDOW_SIZE = 1120;
 
 enum class ScreenState {menu, params, simulation};
-enum class ParamsState {selectType, typeSettings};
 
 class Button {
     public:
@@ -18,6 +17,7 @@ class Button {
             std::string textStr, 
             Color textColor, 
             Color fillColor, 
+            Color outlineColor,
             int x, int y, 
             float width, float height, 
             const sf::Font& font
@@ -39,11 +39,10 @@ struct ParamsMenu {
         ParamsMenu();
 
         void draw(RenderWindow& window);
-
-        ParamsState state = ParamsState::selectType;
+        void handleButtons(RenderWindow& window, const std::optional<Event>& event);
     private:
         Font font;
-        
+
         vector<Button> buttons;
         std::vector<TextBox> textBoxs;
 
@@ -74,7 +73,7 @@ class Graphics {
         void drawSimulator(RenderWindow &window);
         void drawMenu(RenderWindow& window);
 
-        void handleEvents(RenderWindow& window);
+        bool handleEvents(RenderWindow& window);
 
         Menu menu;
         SimulatorMenu simulator;

@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <iostream>
 
 using namespace sf;
 
@@ -18,7 +19,7 @@ class TextBox {
             unsigned int charSize = 24
         );
 
-        void handle_event(const Event& event, const RenderWindow& window);
+        void handle_event(const std::optional<Event>& event, const RenderWindow& window);
         void draw(RenderWindow& window) const;
         const std::string& get_text() const;
         void set_label(const std::string& labelText);
