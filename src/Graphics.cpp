@@ -193,10 +193,12 @@ void Graphics::draw(Population p, RenderWindow &w, Vector2f offset, float cellSi
     }
 }
 
-void Graphics::graphEvolution(RenderWindow &w, Population p, Vector2f offset) {
+void Graphics::graphEvolution(RenderWindow& w, Population p, Vector2f offset) {
     const vector<Entity*> entities = p.getEntities();
+
     float card_rab = 0;
     float card_fox = 0;
+
     float graphWidth = 250.f;
     float graphHeight = 200.f;
     float xStep = 5.f;
@@ -209,6 +211,7 @@ void Graphics::graphEvolution(RenderWindow &w, Population p, Vector2f offset) {
             card_fox++;
         }
     }
+
     simulator.rabbitsHistory.push_back(card_rab);
     simulator.foxesHistory.push_back(card_fox);
 
@@ -228,13 +231,11 @@ void Graphics::graphEvolution(RenderWindow &w, Population p, Vector2f offset) {
     axes[3].color = Color::Black;
     w.draw(axes);
 
-    size_t pointCount = simulator.rabbitsHistory.size();
-    float xStepProp = graphWidth / std::max(1.f, static_cast<float>(pointCount - 1));
-
     for (size_t i = simulator.startIndex; i < simulator.rabbitsHistory.size(); ++i) {
         float x = (i - simulator.startIndex) * xStep;
+
         if (x > graphWidth - pointSize) {
-            x = i*xStepProp;
+            simulator.startIndex++;
             break;
         }
 

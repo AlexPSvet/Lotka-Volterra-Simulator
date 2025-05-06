@@ -162,37 +162,41 @@ void Console::start() {
     EntityParams params;
 
     TypeParams rabbitParams(
-        100,  // entityInit : 100 lapins au début (ils se reproduisent vite)
-        10,  // foodInit : 200 unités d'herbe initiale
-        20,
-        50,   // foodToReproduceLevel : besoin de 10 unités de nourriture pour se reproduire
-        1,    // foodPerMove : coûte 1 unité de nourriture pour chaque mouvement
-        5,    // foodValue : chaque herbe rapporte 5 unités
-        40,   // probReproduce : 40% de chance de reproduction après atteindre le niveau
-        1,    // minFreeBirth : besoin d'au moins 1 case libre pour se reproduire
-        {}    // preys : le lapin ne chasse personne (herbivore)
+        20,   // entityInit
+        5,   // foodMin
+        20,   // foodMax
+        15,   // foodToReproduceLevel
+        1,    // foodPerMove
+        6,    // foodValue
+        45,   // probReproduce
+        3,    // minFreeBirth
+        {}    // preys
     );
 
     TypeParams foxParams(
-        50,   // entityInit : 50 renards au début (moins nombreux)
-        20,    // foodInit : 0 nourriture initiale (renards chassent uniquement des lapins)
-        30,
-        30,   // foodToReproduceLevel : besoin de 30 unités de nourriture accumulées pour se reproduire
-        -1,   // foodPerMove : chaque déplacement coûte 1 unités (plus énergivore que le lapin)
-        15,   // foodValue : chaque lapin mangé donne 15 unités d'énergie
-        50,   // probReproduce : 20% de chance de reproduction après seuil atteint
-        2,    // minFreeBirth : au moins 2 cases libres pour donner naissance
-        {Type::rabbit} // preys : le renard chasse le type `Rabbit`
+        20,               // entityInit
+        5,                // foodMin
+        20,               // foodMax
+        10,               // foodToReproduceLevel
+        -1,               // foodPerMove
+        15,               // foodValue
+        80,               // probReproduce
+        4,                // minFreeBirth
+        {Type::rabbit}    // preys
     );
 
     params.addType(Type::rabbit, rabbitParams);
     params.addType(Type::fox, foxParams);
     
     game = new Game(params, TAILLE_GRID);
+
     // Custom params
     // setParams();
 
     simulation();
+
+    system("convert -delay 10 -loop 0 *.ppm animation.gif");
+    system("rm *.ppm");
 
     stop();
 }
