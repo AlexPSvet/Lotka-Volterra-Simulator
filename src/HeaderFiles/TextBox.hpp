@@ -21,7 +21,7 @@ class TextBox {
 
         void handle_event(const std::optional<Event>& event, const RenderWindow& window);
         void draw(RenderWindow& window) const;
-        const std::string& get_text() const;
+        std::string getText();
         void set_label(const std::string& labelText);
         void setText(const std::string& textStr);
     private:

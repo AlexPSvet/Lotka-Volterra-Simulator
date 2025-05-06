@@ -13,7 +13,7 @@ void Game::setEntityInit() {
     Ensemble emptyCases = population.getGrid().getEmptyCases();
     for (Type type : params.getTypes()) {
         TypeParams typeParams = params.getTypeParams(type);
-        int init = typeParams.getEntityInit();
+        int init = typeParams.entityInit;
         for (int i = 0; i < init; i++) {
             int cardinal = emptyCases.cardinal();
             if (cardinal == 0) {
@@ -81,7 +81,7 @@ void Game::moveRandom(Entity* entity){
     Coord currentCoord = entity->getCoord();
     Ensemble neighbours = emptyNeighbours(currentCoord);
 
-    entity->addFood(typeParams.getFoodPerMove());
+    entity->addFood(typeParams.foodPerMove);
 
     // If no neighbours, can't move.
     if (neighbours.cardinal() == 0) {
@@ -92,10 +92,10 @@ void Game::moveRandom(Entity* entity){
     int ind = rand() % neighbours.cardinal();
     move(entity, currentCoord.toInt(), neighbours[ind]);
 
-    int minFreeBirth = typeParams.getMinFreeBirth();
-    int foodToReproduce = typeParams.getFoodToReproduce();
+    int minFreeBirth = typeParams.minFreeBirth;
+    int foodToReproduce = typeParams.foodToReproduceLevel;
     if (neighbours.cardinal() >= minFreeBirth && entity->getFoodLevel() > foodToReproduce) {
-        int probRepro = typeParams.getProbToReproduce();
+        int probRepro = typeParams.probReproduce;
         int random = rand() % 100;
         if (random <= probRepro) {
             ajouteAnimal(type, 0, currentCoord.toInt());
@@ -109,7 +109,7 @@ void Game::eatPrey(Entity* entity, int preyId) {
     Coord preyCoord = prey->getCoord();
     Type preyType = prey->getType();
     TypeParams params = population.getParams().getTypeParams(preyType);
-    entity->addFood(params.getFoodValue());
+    entity->addFood(params.foodValue);
     population.supprime(preyId);
     move(entity, entity->getCoord().toInt(), preyCoord.toInt());
 }
@@ -120,8 +120,8 @@ void Game::moveEntity(Entity* entity) {
     TypeParams typeParams = population.getParams().getTypeParams(type);
 
     // If he hasn't enough food to reproduce, and there are preys, then eat one of them.
-    if (entity->getFoodLevel() <= typeParams.getFoodMin()) {
-        for (Type preyType : typeParams.getPreys()) {
+    if (entity->getFoodLevel() <= typeParams.foodMin) {
+        for (Type& preyType : typeParams.preys) {
             Ensemble preys = typeNeighbours(coord, preyType);
             if (preys.cardinal() != 0) {
                 int ind = rand() % preys.cardinal();

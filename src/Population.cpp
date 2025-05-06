@@ -22,42 +22,6 @@ TypeParams::TypeParams(
     preys.insert(preys.end(), p.begin(), p.end());
 }
 
-int TypeParams::getEntityInit() {
-    return entityInit;
-}
-
-int TypeParams::getFoodMin() {
-    return foodMin;
-}
-
-int TypeParams::getFoodMax() {
-    return foodMax;
-}
-
-int TypeParams::getFoodToReproduce() {
-    return foodToReproduceLevel;
-}
-
-int TypeParams::getFoodPerMove() {
-    return foodPerMove;
-}
-
-int TypeParams::getFoodValue() {
-    return foodValue;
-}
-
-int TypeParams::getProbToReproduce() {
-    return probReproduce;
-}
-
-int TypeParams::getMinFreeBirth() {
-    return minFreeBirth;
-}
-
-vector<Type>& TypeParams::getPreys() {
-    return preys;
-}
-
 bool TypeParams::isPrey(Type type) {
     for (Type t : preys) {
         if (t == type) {
@@ -105,8 +69,8 @@ void Population::set(int id, int coord) {
 
 
     TypeParams& typeParams = params.getTypeParams(entity->getType());
-    int minFood = typeParams.getFoodMin();
-    int maxFood = typeParams.getFoodMax();
+    int minFood = typeParams.foodMin;
+    int maxFood = typeParams.foodMax;
     int foodLevel = minFood + rand() % (maxFood - minFood);
     
     entity->setFoodLevel(foodLevel);

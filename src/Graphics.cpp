@@ -37,7 +37,7 @@ void Button::draw(sf::RenderWindow& window) const {
 
 // PARAMS MENU
 
-ParamsMenu::ParamsMenu() {
+ParamsMenu::ParamsMenu(Game*& game) : game(game) {
     if (!font.openFromFile("../fonts/tannimbus.otf")) {
         std::cerr << "Error while loading text font.";
     }
@@ -68,14 +68,31 @@ ParamsMenu::ParamsMenu() {
     buttons.push_back(foxButton);
 }
 
-void ParamsMenu::draw(RenderWindow& window) {
+bool ParamsMenu::draw(RenderWindow& window) {
     for (Button& button : buttons) {
         button.draw(window);
+    }
+
+    if (Mouse::isButtonPressed(Mouse::Button::Left)) {
+        Vector2f mousePos = window.mapPixelToCoords(Mouse::getPosition(window));
+        if (buttons[0].box.getGlobalBounds().contains(mousePos)) {
+            saveParams();
+            return true;
+        } else if (buttons[1].box.getGlobalBounds().contains(mousePos)) {
+            typeParamsId = 0;
+            saveParams();
+            setParamsText();
+        } else if (buttons[2].box.getGlobalBounds().contains(mousePos)) {
+            typeParamsId = 1;
+            saveParams();
+            setParamsText();
+        }
     }
 
     for (int i = 0; i < textBoxs.size(); i++) {
         textBoxs[i].draw(window);
     }
+    return false;
 }
 
 void ParamsMenu::handleButtons(RenderWindow& window, const std::optional<Event>& event) {
@@ -84,9 +101,39 @@ void ParamsMenu::handleButtons(RenderWindow& window, const std::optional<Event>&
     }
 }
 
+void ParamsMenu::setParamsText() {
+    EntityParams& params = game->getPopulation().getParams();
+    Type type = ALL_TYPES[typeParamsId];
+    TypeParams& typeParams = params.getTypeParams(type);
+
+    textBoxs[0].setText(std::to_string(typeParams.entityInit));
+    textBoxs[1].setText(std::to_string(typeParams.foodMin));
+    textBoxs[2].setText(std::to_string(typeParams.foodMax));
+    textBoxs[3].setText(std::to_string(typeParams.foodToReproduceLevel));
+    textBoxs[4].setText(std::to_string(typeParams.foodPerMove));
+    textBoxs[5].setText(std::to_string(typeParams.foodValue));
+    textBoxs[6].setText(std::to_string(typeParams.probReproduce));
+    textBoxs[7].setText(std::to_string(typeParams.minFreeBirth));
+}
+
+void ParamsMenu::saveParams() {
+    EntityParams& params = game->getPopulation().getParams();
+    Type type = ALL_TYPES[typeParamsId];
+    TypeParams& typeParams = params.getTypeParams(type);
+
+    typeParams.entityInit = std::stoi(textBoxs[0].getText());
+    typeParams.foodMin = std::stoi(textBoxs[1].getText());
+    typeParams.foodMax = std::stoi(textBoxs[2].getText());
+    typeParams.foodToReproduceLevel = std::stoi(textBoxs[3].getText());
+    typeParams.foodPerMove = std::stoi(textBoxs[4].getText());
+    typeParams.foodValue = std::stoi(textBoxs[5].getText());
+    typeParams.probReproduce = std::stoi(textBoxs[6].getText());
+    typeParams.minFreeBirth = std::stoi(textBoxs[7].getText());
+}
+
 // GRAPHICS
 
-Graphics::Graphics() {
+Graphics::Graphics() : paramsMenu(game) {
     if (!rabbitTexture.loadFromFile("../assets/bugs.png")) {
         std::cerr << "Error: no se pudo cargar la imagen del conejo." << std::endl;
     }
@@ -101,6 +148,10 @@ Graphics::Graphics() {
         cerr << "Error: no se pudo cargar la imagen." << endl;
         return;
     }
+}
+
+Graphics::~Graphics() {
+    delete game;
 }
 
 void Graphics::draw_point(RenderWindow &w, Vector2f pos, Color color, Vector2f offset, float cellSize) {
@@ -224,6 +275,7 @@ void Graphics::drawMenu(RenderWindow& window) {
         }
         if (menu.paramsButton.contains(mousePos)) {
             std::cout << "Params presionado 🐰🛠️" << std::endl;
+            paramsMenu.setParamsText();
             state = ScreenState::params;
         }
         // sleep(sf::milliseconds(100));
@@ -312,7 +364,9 @@ void Graphics::start() {
                 drawMenu(window);
                 break;
             case ScreenState::params:
-                paramsMenu.draw(window);
+                if (paramsMenu.draw(window)) {
+                    state = ScreenState::menu;
+                }
                 break;
             case ScreenState::simulation:
                 drawSimulator(window);
@@ -325,5 +379,4 @@ void Graphics::start() {
 
 void Graphics::stop() {
     game->stop();
-    delete game;
 }

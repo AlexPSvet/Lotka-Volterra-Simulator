@@ -11,7 +11,7 @@ const int WINDOW_SIZE = 1120;
 
 enum class ScreenState {menu, params, simulation};
 
-class Button {
+struct Button {
     public:
         Button(
             std::string textStr, 
@@ -24,7 +24,7 @@ class Button {
         );
 
         void draw(sf::RenderWindow& window) const;
-    private:
+        
         sf::RectangleShape box;
         sf::Text text;
 };
@@ -36,11 +36,15 @@ struct Menu {
 
 struct ParamsMenu {
     public:
-        ParamsMenu();
+        ParamsMenu(Game*& game);
 
-        void draw(RenderWindow& window);
+        bool draw(RenderWindow& window);
         void handleButtons(RenderWindow& window, const std::optional<Event>& event);
+    
+        void setParamsText();
+        void saveParams();
     private:
+        Game*& game;
         Font font;
 
         vector<Button> buttons;
@@ -62,6 +66,7 @@ struct SimulatorMenu {
 class Graphics {
     public:
         Graphics();
+        ~Graphics();
 
         void start();
         void stop();

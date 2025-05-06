@@ -10,8 +10,7 @@
 /**
  * @brief Configuration parameters for a given entity type.
  */
-class TypeParams {
-public:
+struct TypeParams {
     /**
      * @brief Construct TypeParams with all configuration values.
      */
@@ -27,37 +26,17 @@ public:
         std::vector<Type> types
     );
 
-    /// Initial number of entities at simulation start.
-    int getEntityInit();
-    /// Minimum food level.
-    int getFoodMin();
-    /// Maximum food level.
-    int getFoodMax();
-    /// Food level required to reproduce.
-    int getFoodToReproduce();
-    /// Food consumed per movement.
-    int getFoodPerMove();
-    /// Food gained when eating.
-    int getFoodValue();
-    /// Probability (0–100) to reproduce when possible.
-    int getProbToReproduce();
-    /// Minimum number of adjacent free cells required for birth.
-    int getMinFreeBirth();
-    /// Returns the list of prey types.
-    std::vector<Type>& getPreys();
-
     /// Check if a given type is considered prey.
     bool isPrey(Type type);
 
-private:
-    const int entityInit;
-    const int foodMin;
-    const int foodMax;
-    const int foodToReproduceLevel;
-    const int foodPerMove;
-    const int foodValue;
-    const int probReproduce;
-    const int minFreeBirth;
+    int entityInit;
+    int foodMin;
+    int foodMax;
+    int foodToReproduceLevel;
+    int foodPerMove;
+    int foodValue;
+    int probReproduce;
+    int minFreeBirth;
 
     std::vector<Type> preys;
 };

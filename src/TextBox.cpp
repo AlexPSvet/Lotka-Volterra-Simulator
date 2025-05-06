@@ -59,8 +59,8 @@ void TextBox::setText(const std::string& textStr) {
     text.setString(textStr);
 }
 
-const std::string& TextBox::get_text() const {
-    return input;
+std::string TextBox::getText() {
+    return text.getString();
 }
 
 void TextBox::set_focus(bool focus) {
