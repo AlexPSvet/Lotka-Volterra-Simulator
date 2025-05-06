@@ -13,7 +13,7 @@ struct  Graphics {
 
     static void draw_point(RenderWindow &w, Vector2f pos, Color color, Vector2f offset, float cellSize);
     void draw(Population p, RenderWindow &w, Vector2f offset, float cellSize);
-    void graphEvolution(RenderWindow &w, Population p, float turn, Vector2f offset);
+    void graphEvolution(RenderWindow &w, Population p, Vector2f offset);
     void start(RenderWindow &window);
     void menu();
 
