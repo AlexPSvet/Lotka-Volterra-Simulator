@@ -7,7 +7,7 @@ Button::Button(
     Color textColor, 
     Color fillColor, 
     Color outlineColor,
-    int x, int y, 
+    float x, float y,
     float width, float height, 
     const sf::Font& font) : text(font)
 {
@@ -172,10 +172,13 @@ void Graphics::graphEvolution(RenderWindow &w, Population p, Vector2f offset) {
     axes[3].color = Color::Black;
     w.draw(axes);
 
+    size_t pointCount = simulator.rabbitsHistory.size();
+    float xStepProp = graphWidth / std::max(1.f, static_cast<float>(pointCount - 1));
+
     for (size_t i = simulator.startIndex; i < simulator.rabbitsHistory.size(); ++i) {
         float x = (i - simulator.startIndex) * xStep;
         if (x > graphWidth - pointSize) {
-            simulator.startIndex++;
+            x = i*xStepProp;
             break;
         }
 

@@ -18,7 +18,7 @@ class Button {
             Color textColor, 
             Color fillColor, 
             Color outlineColor,
-            int x, int y, 
+            float x, float y,
             float width, float height, 
             const sf::Font& font
         );
