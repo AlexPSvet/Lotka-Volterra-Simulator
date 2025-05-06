@@ -4,36 +4,54 @@
 #include <iostream>
 #include <cstdlib>
 
-using namespace std;
-
 const int MAXCARD = 10e3;
 
+/**
+ * @brief Represents a fixed-size set of integers with basic operations.
+ *
+ * Used to manage collections of grid coordinates or other integer-based IDs.
+ */
 struct Ensemble {
-  public:
-    //Constructeurs:
-    Ensemble();
+public:
+  /// Default constructor. Initializes an empty set.
+  Ensemble();
 
-    //Gets:
-    bool estVide() const;
-    int cardinal() const;
-    int getPosition(int o) const;
+  /// Returns true if the set is empty.
+  bool estVide() const;
 
-    //Ajoute:
-    void ajoute(int o);
-    int tire();
-    void setValue(int i, int o);
+  /// Returns the number of elements in the set.
+  int cardinal() const;
 
-    //Methode aditionels:
-    void erase(int i);
-    void set(int value, int amount);
-    void clear();
+  /// Gets the value at position `o` in the internal array.
+  int getPosition(int o) const;
 
-    //Operateurs:
-    std::ostream& operator<<(std::ostream& out);
-    int operator[](int i) const;
-  private:
-    int t[MAXCARD];
-    int card;
+  /// Adds an element `o` to the set.
+  void ajoute(int o);
+
+  /// Randomly selects and removes an element from the set. Returns its value.
+  int tire();
+
+  /// Sets the element at index `i` to value `o`.
+  void setValue(int i, int o);
+
+  /// Removes the element at index `i`.
+  void erase(int i);
+
+  /// Fills the set with `amount` repetitions of `value`.
+  void set(int value, int amount);
+
+  /// Clears the set (removes all elements).
+  void clear();
+
+  /// Stream output operator for printing the set.
+  std::ostream& operator<<(std::ostream& out);
+
+  /// Access operator for reading element at index `i`.
+  int operator[](int i) const;
+
+private:
+  int t[MAXCARD]; ///< Internal storage array.
+  int card;       ///< Current number of elements in the set.
 };
 
 #endif

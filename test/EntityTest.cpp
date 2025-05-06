@@ -1,6 +1,6 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
-#include "Entity.hpp"
+#include "../src/HeaderFiles/Entity.hpp"
 
 TEST_CASE("Entity constructor and getters") {
     Entity rabbit(1, Type::rabbit, 2);
