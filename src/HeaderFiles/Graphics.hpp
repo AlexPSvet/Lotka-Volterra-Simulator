@@ -88,6 +88,7 @@ class Graphics {
         Texture foxTexture;
         Texture gameTexture;
         Texture menuTexture;
+        Texture paramsTexture;
 
         Game* game;
         ScreenState state = ScreenState::menu;

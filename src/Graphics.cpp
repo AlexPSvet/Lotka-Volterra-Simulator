@@ -55,14 +55,14 @@ ParamsMenu::ParamsMenu(Game*& game) : game(game) {
             "Min free cases"
         };
     for (int i = 0; i < strings.size(); i++) {
-        TextBox text(strings[i], 200, 200 + 50 * i, 400, 40, font);
+        TextBox text(strings[i], 200, 300 + 50 * i, 400, 40, font);
         textBoxs.push_back(text);
     }
 
     Color outline(80, 80, 80);
-    Button menuButton("MENU", Color::Green, Color::Black, outline, midScreen, WINDOW_SIZE - 400, 100, 100, font);
-    Button rabbitButton("RABBIT", Color::White, Color::Black, outline, midScreen - 100, 50, 150, 60, font);
-    Button foxButton("FOX", Color::White, Color::Black, outline,  midScreen + 100, 50, 150, 60, font);
+    Button menuButton("MENU", Color::White, Color::Black, outline, midScreen, WINDOW_SIZE - 400, 100, 100, font);
+    Button rabbitButton("RABBIT", Color::Green, Color::Black, outline, midScreen - 100, 150, 100, 60, font);
+    Button foxButton("FOX", Color::Red, Color::Black, outline,  midScreen + 100, 150, 100, 60, font);
     buttons.push_back(menuButton);
     buttons.push_back(rabbitButton);
     buttons.push_back(foxButton);
@@ -146,6 +146,10 @@ Graphics::Graphics() : paramsMenu(game) {
         return;
     }
     if (!menuTexture.loadFromFile("../assets/Life.png")) {
+        cerr << "Error: no se pudo cargar la imagen." << endl;
+        return;
+    }
+    if (!paramsTexture.loadFromFile("../assets/Params.png")) {
         cerr << "Error: no se pudo cargar la imagen." << endl;
         return;
     }
@@ -365,6 +369,7 @@ void Graphics::start() {
                 drawMenu(window);
                 break;
             case ScreenState::params:
+                window.draw(Sprite(paramsTexture));
                 if (paramsMenu.draw(window)) {
                     state = ScreenState::menu;
                 }

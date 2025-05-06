@@ -13,8 +13,9 @@ int main() {
     cin >> answer;
 
     if (answer == "s") {
-        Graphics graphics;
-        graphics.start();
+        Graphics* graphics = new Graphics();
+        graphics->start();
+        delete graphics;
     } else if (answer == "c") {
         Console console;
         console.start();
