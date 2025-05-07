@@ -48,7 +48,7 @@ void Console::drawGrid() {
                     Type t = entity->getType();
 
                     switch (t) {
-                        case Type::rabbit: r = 0; g = 255; b = 0; break; // vert
+                        case Type::rabbit: r = 0; g = 108; b = 255; break; // vert
                         case Type::fox: r = 255; g = 0; b = 0; break; // rouge
                         default: r = g = b = 128; break; // gris
                     }
@@ -62,7 +62,7 @@ void Console::drawGrid() {
             fic << endl;
         }
     }
-
+    
     fic.close();
 }
 
