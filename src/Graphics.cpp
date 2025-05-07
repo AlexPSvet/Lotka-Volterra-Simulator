@@ -229,21 +229,33 @@ void Graphics::graphEvolution(RenderWindow &w, Population p, Vector2f offset) {
     w.draw(axes);
 
     size_t pointCount = simulator.rabbitsHistory.size();
-    float xStepProp = graphWidth / std::max(1.f, static_cast<float>(pointCount - 1));
+    float x = 0.f;
 
-    for (size_t i = simulator.startIndex; i < simulator.rabbitsHistory.size(); ++i) {
-        float x = (i - simulator.startIndex) * xStep;
-        if (x > graphWidth - pointSize) {
-            x = i*xStepProp;
-            break;
+    if (pointCount * xStep < graphWidth) {
+
+        for (size_t i = 0; i < pointCount; ++i) {
+            x = i * xStep;
+
+            float y_rabbit = graphHeight * (1 - simulator.rabbitsHistory[i] / max_y);
+            float y_fox = graphHeight * (1 - simulator.foxesHistory[i] / max_y);
+
+            draw_point(w, {x, y_rabbit - pointSize / 2.f}, Color::Blue, offset, pointSize);
+            draw_point(w, {x, y_fox - pointSize / 2.f}, Color::Red, offset, pointSize);
         }
+    } else {
+        float xStepProp = graphWidth / static_cast<float>(pointCount - 1);
+        for (size_t i = 0; i < pointCount; ++i) {
+            x = i * xStepProp;
 
-        float y_rabbit = graphHeight * (1 - simulator.rabbitsHistory[i] / max_y);
-        float y_fox = graphHeight * (1 - simulator.foxesHistory[i] / max_y);
+            float y_rabbit = graphHeight * (1 - simulator.rabbitsHistory[i] / max_y);
+            float y_fox = graphHeight * (1 - simulator.foxesHistory[i] / max_y);
 
-        draw_point(w, {x, y_rabbit - pointSize / 2.f}, Color::Blue, offset, pointSize);
-        draw_point(w, {x, y_fox - pointSize / 2.f}, Color::Red, offset, pointSize);
+            draw_point(w, {x, y_rabbit - pointSize / 2.f}, Color::Blue, offset, pointSize);
+            draw_point(w, {x, y_fox - pointSize / 2.f}, Color::Red, offset, pointSize);
+        }
     }
+
+
 }
 
 void Graphics::drawSimulator(RenderWindow &window) {
