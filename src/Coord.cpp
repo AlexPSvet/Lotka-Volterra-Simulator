@@ -6,6 +6,10 @@ Coord::Coord() {
 }
 
 Coord::Coord(int n) {
+    if (n < 0 || n >= TAILLE_GRID * TAILLE_GRID) {
+        throw std::runtime_error("Invalid 1D coordinate index.");
+    }
+
     y = n / TAILLE_GRID;
     x = n % TAILLE_GRID;
 }
@@ -18,11 +22,11 @@ Coord::Coord(int x, int y) {
     this->y = y;
 }
 
-float Coord::getX() const{
+int Coord::getX() const{
     return x;
 }
 
-float Coord::getY() const{
+int Coord::getY() const{
     return y;
 }
 
